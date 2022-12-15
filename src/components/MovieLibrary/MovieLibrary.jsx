@@ -5,6 +5,7 @@ import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import BasicPagination from "../Pagination";
 import MovieLibraryList from "./MovieLibraryList";
 import MovieLibraryNavbar from "./MovieLibraryNavbar";
+import filterUsers from "../layout/assets/FilterScripts";
 
 function MovieLibrary() {
   const { loading, movieStorage, dispatch } = useContext(MovieDBContext);
@@ -19,6 +20,7 @@ function MovieLibrary() {
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = movieStorage.slice(indexOfFirstMovie, indexOfLastMovie);
 
+  
   useEffect(() => {
     getMoviesFromStorage().then((movies) => {
       dispatch({
@@ -26,8 +28,13 @@ function MovieLibrary() {
         payload: movies,
       });
     });
+
+      
   }, []);
 
+  const users = new filterUsers(movieStorage);
+  console.log(users.getUsers());
+    
   //change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

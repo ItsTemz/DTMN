@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {FaTheaterMasks} from 'react-icons/fa';
 
 function Navbar({title}) {
+
+  
   return (
     <div className="navbar mb-11 shadow-lg bg-neutral text-neutral-content">
       <div className="navbar-start container mx-auto">
