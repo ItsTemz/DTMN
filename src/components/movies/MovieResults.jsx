@@ -9,7 +9,7 @@ function MovieResults() {
   if (!loading) {
     if (movies.length > 0) {
       return (
-        <div className="grid gird-cols-1 gap-8 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 mt-10">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5">
           {movies.map((movie) => (
             <MovieItem key={movie.imdbID} movie={movie} />
           ))}
