@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { PropagateLoader } from "react-spinners";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import ReactTurntable from "./TurntableComponent";
+import TurnTableOptions from "./TurnTableOptions";
 import "./TurntableStyles.css";
 
-
-function Turntable() {
+function Turntable({ movieSelected }) {
   const { loading, movieStorage } = useContext(MovieDBContext);
   const [prizes, setPrizes] = useState([]);
   let choices = [];
@@ -21,12 +21,16 @@ function Turntable() {
     setPrizes(choices);
   }, [movieStorage]);
 
+  const getWinner = (prize) => {
+    return movieStorage.find((movie) => movie.movieDetails.title === prize);
+  };
+
   if (!loading && prizes.length >= 2) {
     const options = {
       prizes,
-      width: 800,
-      height: 800,
-      wheelColors: ["#0FA3B1", "#B5E2FA", "#F9F7F3", "#EDDEA4"],
+      width: 600,
+      height: 600,
+      wheelColors: ["#0FA3B1", "#B5E2FA", "#F9F7F3", "#EDDEA4", "#1a202c"],
       primaryColor: "gray",
       secondaryColor: "#1a202c",
       fontStyle: {
@@ -50,13 +54,16 @@ function Turntable() {
         return true;
       },
       onComplete(prize) {
-        console.log("prize:", prize);
+        const winner = getWinner(prize);
+        movieSelected(winner);
       },
     };
 
     return (
-      <div className="h-full flex justify-center">
-        <ReactTurntable {...options} />;
+      <div className="h-full flex flex-col">
+        <div className="justify-center w-full mx-auto">
+          <ReactTurntable {...options} />
+        </div>
       </div>
     );
   } else {

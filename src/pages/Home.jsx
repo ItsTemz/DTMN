@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import MovieLibrary from "../components/MovieLibrary/MovieLibrary";
-import Turntable from "../components/Turntable/Turntable";
+import PickerWheelMenu from "../components/PickerWheelMenu";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
 
 function Home() {
@@ -15,8 +15,8 @@ function Home() {
   }, []);
 
   return (
-    <div className="">
-      <Turntable />
+    <div>
+      <PickerWheelMenu />
       <MovieLibrary />
     </div>
   );
