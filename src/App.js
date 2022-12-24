@@ -32,7 +32,7 @@ function App() {
               </main>
             </div>
           </Router>
-          <Footer />
+          {/* <Footer /> */}
         </AlertProvider>
       </MovieDBProvider>
   );
