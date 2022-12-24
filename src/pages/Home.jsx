@@ -10,7 +10,6 @@ function Home() {
   useEffect(() => {
     movieStorage.map((movie) => {
       setChoices(...choices, movie.movieDetails.title);
-      console.log(choices);
     });
   }, []);
 

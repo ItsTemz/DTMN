@@ -6,6 +6,7 @@ import { AlertProvider } from "./context/alert/AlertContext";
 import { MovieDBProvider } from "./context/moviedb/MovieDBContext";
 import About from "./pages/About";
 import Home from "./pages/Home";
+import ManualAdd from "./pages/ManualAdd";
 import Movie from "./pages/Movie";
 import NotFound from "./pages/NotFound";
 import Search from "./pages/Search";
@@ -23,7 +24,8 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/search" element={<Search />} />
-                  <Route path="/movie/:imdbID" element={<Movie />} />
+                  <Route path="/movie/:id" element={<Movie />} />
+                  <Route path="/addEntry" element={<ManualAdd />} />
                   <Route path="/notfound" element={<NotFound />} />
                   <Route path="/*" element={<NotFound />} />
                 </Routes>

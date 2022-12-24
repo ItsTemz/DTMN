@@ -1,6 +1,29 @@
 import axios from "axios";
+import { io } from "socket.io-client";
+const DTMN_API_URL = "http://127.0.0.1:3001";
 
-const DTMN_API_URL = "http://127.0.0.1:3000";
+const socket = io.connect("http://localhost:3001");
+
+// client-side
+socket.on("connect", () => {
+  console.log("Connection to Socket established");
+});
+
+export const NotifyDiscord = async (movie) => {
+  socket.emit("notify_next_watch", movie);
+};
+
+export const markMovieAsWatched = async (movie) => {
+  const data = { dbid: movie.dbid };
+  await axios.put(`${DTMN_API_URL}/movie`, data).then((response) => {
+    if (response.data === true) {
+      alert("Successfully Updated on Database");
+    } else {
+      alert("Movie already marked as watched on the database");
+    }
+    return response.data;
+  });
+};
 
 export const getMovies = async (movie) => {
   const movieDB = axios.create({
@@ -55,7 +78,6 @@ export const addMovieToStorage = async (movie) => {
     backdrop: movie.Poster,
     submittedby: "Admin",
   };
-  console.log(data);
   await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
     if (response.data === true) {
       alert("Successfully Added to the database");
@@ -66,6 +88,22 @@ export const addMovieToStorage = async (movie) => {
   });
 };
 
+export const addCustomEntry = async (entry) =>{
+  const data = {
+    title: entry.title,
+    link: entry.link,
+    submittedby: entry.user || "unknown",
+  }
+  await axios.post(`${DTMN_API_URL}/entry`, data).then((response) => {
+    if (response.data === true) {
+      alert("Added entry to the database");
+    } else {
+      alert("entry with the same title already exists");
+    }
+    return response.data;
+  });
+}
+
 export const getMoviesFromStorage = async () => {
   const movies = axios.create({
     baseURL: `${DTMN_API_URL}/movies`,
@@ -75,15 +113,28 @@ export const getMoviesFromStorage = async () => {
   return response.data;
 };
 
-export const getMovieFromStorage = async (imdbID) => {
+export const getMovieFromStorage = async (id) => {
   const movie = axios.create({
     baseURL: `${DTMN_API_URL}/movie`,
     params: {
-      imdbID: imdbID,
+      id: id,
     },
   });
 
   return await movie.get().then((response) => {
     return response.data;
   });
+};
+
+export const deleteMovieFromStorage = async (id) => {
+  await axios
+    .delete(`${DTMN_API_URL}/movie/${id}`)
+    .then((response) => {
+      if (response.data === true) {
+        alert("Successfully Deleted Movie");
+      } else {
+        alert("Movie doesn't exist");
+      }
+      return response.data;
+    });
 };

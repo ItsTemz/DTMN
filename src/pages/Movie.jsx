@@ -2,27 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
 import TrailerModal from "../components/layout/TrailerModal";
-import { getMovieFromStorage } from "../context/moviedb/MovieDBActions";
+import { deleteMovieFromStorage, getMovieFromStorage } from "../context/moviedb/MovieDBActions";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaTrash } from "react-icons/fa";
 
 function Movie() {
   const { movie, loading, dispatch } = useContext(MovieDBContext);
 
-  // const [movie , setMovie] = useState({});
-
-  const params = useParams();
+  const {id} = useParams();
 
   useEffect(() => {
     dispatch({ type: "SET_LOADING" });
     const getMovieData = async () => {
-      const movieData = await getMovieFromStorage(params.imdbID);
-      console.log(movieData);
+      const movieData = await getMovieFromStorage(id);
       dispatch({ type: "GET_MOVIE_FROM_STORAGE", payload: movieData });
     };
 
     getMovieData();
-  }, [dispatch, params.imdbID]);
+  }, [dispatch, id]);
 
   if (loading || !movie) {
     return <PropagateLoader />;
@@ -44,7 +41,7 @@ function Movie() {
       year,
     } = movie.movieDetails;
 
-    const { submittedby, dateAdded } = movie.otherDetails;
+    const { submittedby, dateAdded , link} = movie.otherDetails;
 
     return (
       movie && (
@@ -56,76 +53,103 @@ function Movie() {
         >
           <div className="h-[65%] flex w-full">
             <div className="p-16 h-[200px] flex justify-end flex-col">
-              <Link className="btn btn-circle btn-outline absolute right-5 top-5" to='/'>
+              <Link
+                className="btn btn-circle btn-outline absolute right-5 top-5"
+                to="/"
+              >
                 <FaArrowLeft icon="fa-solid fa-arrow-left" />
               </Link>
+
               <div className="h-[25%] absolute bottom-64 flex flex-col">
                 <div className="my-5">
-                  <h1 className="text-5xl">{title}</h1>
+                  <h1 className="text-4xl">{title}</h1>
                 </div>
                 <div className="flex flex-row">
-                  <TrailerModal buttonText={"Play Trailer"} url={trailer} />
+                  <div className="flex flex-row">
+                    {trailer && (
+                      <TrailerModal buttonText={"Play Trailer"} url={trailer} />
+                    )}
+                    {link && (
+                      <div className="flex flex-row ">
+                        <a
+                          className="btn btn-outline btn-primary"
+                          href={link}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Link
+                        </a>
+                      </div>
+                    )}
 
-                  <button className="btn btn-circle btn-outline btn-xl mx-5 text-3xl">
-                    +
-                  </button>
-                  <div className="rating rating-lg rating-half">
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="rating-hidden"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-1"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-2"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-1"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-2"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-1"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-2"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-1"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-2"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-1"
-                    />
-                    <input
-                      type="radio"
-                      name="rating-10"
-                      className="bg-orange-400 mask mask-star-2 mask-half-2"
-                    />
+                    <div className="rating rating-lg rating-half">
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="rating-hidden"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-1"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-2"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-1"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-2"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-1"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-2"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-1"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-2"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-1"
+                      />
+                      <input
+                        type="radio"
+                        name="rating-10"
+                        className="bg-orange-400 mask mask-star-2 mask-half-2"
+                      />
+                    </div>
                   </div>
+
+                  <Link
+                    className="btn btn-error btn-outline text-xl"
+                    to="/"
+                    onClick={() => {
+                      deleteMovieFromStorage(movie._id);
+                    }}
+                  >
+                    <FaTrash />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -145,15 +169,20 @@ function Movie() {
               </div>
             </div>
             <div className="grid grid-row-1 mr-10">
+              {actors && (
+                <span>
+                  Cast
+                  <p>{actors}</p>
+                </span>
+              )}
+
+              {genre && (
+                <span>
+                  Genres <p>{genre}</p>
+                </span>
+              )}
               <span>
-                Cast
-                <p>{actors}</p>
-              </span>
-              <span>
-                Genres <p>{genre}</p>
-              </span>
-              <span>
-                This movie was added by <span>{submittedby}</span> on
+                Added by <span className="font-bold">{submittedby}</span> on
                 <span> {dateAdded}</span>
               </span>
             </div>

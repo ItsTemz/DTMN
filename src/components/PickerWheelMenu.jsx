@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 import Turntable from "../components/Turntable/Turntable";
+import { markMovieAsWatched } from "../context/moviedb/MovieDBActions";
+import MovieList from "./MovieList/MovieList";
 import MovieDetailsModal from "./movies/MovieDetailsModal";
 import TurntableMenu from "./Turntable/TurntableMenu";
 
@@ -10,11 +12,14 @@ function PickerWheelMenu() {
   const onWinnerSelected = (movie) => {
     setWinnerMovie(movie);
     setShowModal(true);
-    console.log(winnerMovie);
   };
 
   const handleModalClose = () => {
     setShowModal(false);
+  };
+
+  const markAsWatched = () => {
+    markMovieAsWatched(winnerMovie);
   };
   return (
     <div className="grid grid-cols-2 p-2">
@@ -22,9 +27,11 @@ function PickerWheelMenu() {
         <MovieDetailsModal
           movie={winnerMovie}
           handleModalClose={handleModalClose}
+          markAsWatched={markAsWatched}
         />
       )}
       <Turntable movieSelected={onWinnerSelected} />
+      <MovieList />
       {/* <TurntableMenu /> */}
     </div>
   );

@@ -1,9 +1,7 @@
-from ast import Add
-from contextlib import suppress
-from typing_extensions import Required
 import requests
 import asyncio
 import nextcord
+import socketio
 from nextcord.ext import commands
 from nextcord import Interaction
 from datetime import date
@@ -16,11 +14,13 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", help_command=None, intents=intents)
 
 guild_ids = [1004514855736328252, 722529712077013082]
+sio = socketio.AsyncClient()
 
 
 @bot.event
 async def on_ready():
-    print("Bot Is Ready")
+    print(f"logged in as: {bot.user.name}")
+    await main()
 
 # Variables
 surl = "https://mdblist.p.rapidapi.com/"
@@ -33,7 +33,7 @@ sheaders = {
 numbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣",
            "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
-MovieStorageDB = "http://Localhost:3000/movies"
+MovieStorageDB = "http://Localhost:3001/movies"
 
 headersList = {
     "Accept": "*/*",
@@ -220,5 +220,48 @@ async def fetchMovie(interaction: Interaction, search, year, id=None):
 async def addmovie(interaction, *, search, year: int = SlashOption(required=False, default=0)):
     await fetchMovie(interaction, search, year)
 
+
+@sio.event
+async def connect():
+    print("Socket IO link established")
+
+
+@sio.on('notify_next_watch')
+async def NotifyNextWatch(data):
+    channel = bot.get_channel(1022484228409139282)
+    moviedata = data['movieDetails']
+    otherData = data['otherDetails']
+    description = moviedata['description']
+    userNameParts = otherData['submittedby'].split('#')
+
+    member = nextcord.utils.find(lambda m: m.name ==
+                                 userNameParts[0] and m.discriminator == userNameParts[1], channel.members)
+
+    MovieAddedEmbed = nextcord.Embed(
+        title=f"{moviedata['title']}", url=f"https://www.imdb.com/title/{moviedata['imdbID']}/", description=f"{description[0:250]}...", color=0xffebeb)
+    MovieAddedEmbed.set_author(
+        name="Tomorrows Movie!🎞️")
+
+    if member:
+        MovieAddedEmbed.add_field(
+            name="Added By 🙋‍♂️", value=f"{member.mention}")
+    else:
+        MovieAddedEmbed.add_field(
+            name="Added By 🙋‍♂️", value=f"{otherData['submittedby']}")
+
+    MovieAddedEmbed.add_field(name="Release Year 🗓️ ",
+                              value=f"{moviedata['year']}", inline=True)
+    MovieAddedEmbed.add_field(
+        name="Runtime ⌚", value=f"{moviedata['runtime']}", inline=True)
+    MovieAddedEmbed.add_field(
+        name="Trailer 🎥", value=f"{moviedata['trailer']}", inline=True)
+    MovieAddedEmbed.set_thumbnail(url=f"{moviedata['poster']}")
+
+    await channel.send(embed=MovieAddedEmbed)
+
+
+async def main():
+    await sio.connect('http://localhost:3001')
+    await sio.wait()
 
 bot.run("MTAwNTk1MzA2MTgyODcxMDQwMA.GeNMDT.4bCbFR5mkOU6GhrfLvYk9tUf_FudH8s-waWICs")

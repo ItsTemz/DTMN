@@ -16,7 +16,7 @@ function MovieLibraryItem({ movie }) {
 
   if (!loading) {
     if (movieDetails && contributorDetails){
-      const { poster, description, imdbID, title , backdrop} = movieDetails;
+      const { poster, description, imdbID, title, backdrop} = movieDetails;
 
       const { submittedby } = contributorDetails;
       return (
@@ -31,23 +31,27 @@ function MovieLibraryItem({ movie }) {
             <h2 className="card-title">{title}</h2>
             <div className="object-contain">
               <p className="truncate-overflow sm:text-sm">{description}</p>
-              <a
-                className="btn btn-xs btn-outline my-2"
-                href={`https://www.imdb.com/title/${imdbID}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                More info
-              </a>
+              {imdbID && (
+                <a
+                  className="btn btn-xs btn-outline my-2"
+                  href={`https://www.imdb.com/title/${imdbID}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  imdb page
+                </a>
+              )}
             </div>
-            <div className="card-actions justify-end">
-              <Link
-                className="btn btn-outline btn-primary btn-md text-base-content bg-blur-5"
-                to={`/movie/${imdbID}`}
-              >
-                View Details
-              </Link>
-            </div>
+            {movie._id && (
+              <div className="card-actions justify-end">
+                <Link
+                  className="btn btn-outline btn-primary btn-md text-base-content bg-blur-5"
+                  to={`/movie/${movie._id}`}
+                >
+                  Details
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       );

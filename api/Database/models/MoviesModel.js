@@ -52,6 +52,18 @@ const movieSchema = new mongoose.Schema({
     },
     dateAdded: {
       type: String,
+    },
+    dateWatched: {
+      type: String,
+    },
+    watched: {
+      type: Boolean,
+    },
+    link:{
+      type: String,
+    },
+    tags: {
+      type: Array,
     }
   },
 });

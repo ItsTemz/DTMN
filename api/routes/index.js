@@ -12,15 +12,10 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Duck Talk Movie API" });
 });
 
-router.get("/movies", async function (req, res) {
-  const movieList = await Movie.find();
-  res.send(movieList);
-});
-
 router.get("/movie", async function (req, res) {
-  const imdbID = req.query.imdbID;
-  
-  await getMovie(imdbID)
+  const _id = req.query.id;
+  console.log(_id)
+  await getMovie(_id)
     .then((movie) => {
       res.send(movie);
       console.log(movie);
@@ -28,6 +23,11 @@ router.get("/movie", async function (req, res) {
     .catch((error) => {
       res.send(error);
     });
+});
+
+router.get("/movies", async function (req, res) {
+  const movieList = await Movie.find();
+  res.send(movieList);
 });
 
 router.post("/movies", async function (req, res) {
@@ -40,50 +40,105 @@ router.post("/movies", async function (req, res) {
   }
 });
 
-router.delete("/movies", async function (req, res) {
+router.post("/entry", async function (req, res) {
   const content = req.body;
-  const deleted = await deleteMovie(content.dbid);
-  if (deleted) {
-    res.send("Deleted Successfully");
+  console.log(content);
+  const handledEntry = await handleAddingMovie(content);
+  if (handledEntry === true) {
+    res.send(true);
+  } else {
+    res.send(handledEntry);
   }
+});
+
+router.put("/movie", async function (req, res) {
+  const content = req.body;
+  console.log(content);
+  const updatedMovie = await updateMovie(content.dbid);
+  if (updatedMovie === true) {
+    res.send(true);
+  } else {
+    res.send(updatedMovie);
+  }
+});
+
+const deleteMovie = async (id) => {
+  console.log(id);
+  try {
+    await Movie.findOneAndDelete({ _id: id });
+    return true;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+router.delete("/movie/:id", async function (req, res) {
+  const id = req.params.id;
+  const deletedMovie = await deleteMovie(id);
+  if (deletedMovie === true) {
+    res.send(true);
+  } else {
+    res.send(deletedMovie);
+  }
+});
+
+router.delete("/movies/all", async function (req, res) {
+  clearDB();
+  res.send("Cleared all movies");
+  console.log("Cleared DB");
 });
 
 const handleAddingMovie = async (content) => {
   const imdbID = content.imdbid;
   const date = new Date().getUTCDate();
   const movieContent = {
-    dbid: imdbID,
     movieDetails: {
       title: content.title,
-      year: content.year,
-      description: content.description,
-      released: content.released,
-      runtime: content.runtime,
-      actors: content.actors,
-      genre: content.genre,
-      director: content.director,
-      language: content.language,
-      score: content.score,
-      imdbID: content.imdbid,
-      trailer: content.trailer,
-      backdrop: content.backdrop,
     },
     otherDetails: {
-      submittedby: content.submittedby,
+      submittedby: content.submittedby || content.user,
+      link: content.link,
       dateAdded: date,
+      watched: false,
     },
   };
-  
-  try {
-    const movie = await completeMovieData(imdbID, movieContent.otherDetails);
-    // check if the movie exists on the database or not
-    const foundMovie = await getMovie(imdbID);
-    if (!foundMovie) {
-      await addMovie(movie);
-      return true;
-    } else {
-      return foundMovie;
+  if (imdbID) {
+    try {
+      const movie = await completeMovieData(imdbID, movieContent.otherDetails);
+      // check if the movie exists on the database or not
+      const foundMovie = await getMovie(imdbID);
+      if (!foundMovie) {
+        await addMovie(movie);
+        return true;
+      } else {
+        return foundMovie;
+      }
+    } catch (error) {
+      console.log(error);
     }
+  } else {
+    try {
+      const entry = movieContent;
+      // check if the movie exists on the database or not
+      const foundEntry = await getEntry(entry);
+      if (!foundEntry) {
+        await addMovie(entry);
+        return true;
+      } else {
+        return foundEntry;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+};
+
+const getEntry = async (entry) => {
+  try {
+    const foundMovie = await Movie.findOne({
+      "movieDetails.title": entry.title,
+    });
+    return foundMovie;
   } catch (error) {
     console.log(error);
   }
@@ -98,9 +153,12 @@ const addMovie = async (movie) => {
   }
 };
 
-const deleteMovie = async (id) => {
+const updateMovie = async (data) => {
   try {
-    await Movie.findOneAndDelete({ _id: id });
+    await Movie.updateOne(
+      { dbid: data },
+      { $set: { "otherDetails.watched": true } }
+    );
     return true;
   } catch (err) {
     console.log(err);
@@ -109,14 +167,14 @@ const deleteMovie = async (id) => {
 
 const getMovie = async (id) => {
   try {
-    const foundMovie = await Movie.findOne({ dbid: id });
+    const foundMovie = await Movie.findOne({ _id: id });
     return foundMovie;
   } catch (error) {
     console.log(error);
   }
 };
 
-const completeMovieData = async (id, otherDetails)=>{
+const completeMovieData = async (id, otherDetails) => {
   try {
     const mdba = axios.create({
       baseURL: "https://movie-database-alternative.p.rapidapi.com/",
@@ -169,22 +227,21 @@ const completeMovieData = async (id, otherDetails)=>{
         backdrop: mdlData.backdrop,
       },
       otherDetails: {
-        submittedby: otherDetails.submittedby,
-        dateAdded: otherDetails.dateAdded,
+        submittedby: otherDetails.submittedby || otherDetails.user,
+        link: otherDetails.link,
+        dateAdded: new Date().getDate,
+        watched: false,
       },
     };
     return movie;
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  
-}
+};
 
 module.exports = router;
 
 //Carefull with this
-// const clearDB = async ()=>{
-//   await Movie.deleteMany({});
-// }
-// clearDB();
+const clearDB = async () => {
+  await Movie.deleteMany({});
+};
