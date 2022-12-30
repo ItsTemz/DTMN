@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
+import { FaArrowLeft, FaTrash } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
 import TrailerModal from "../components/layout/TrailerModal";
-import { deleteMovieFromStorage, getMovieFromStorage } from "../context/moviedb/MovieDBActions";
+import {
+  deleteMovieFromStorage,
+  getMovieFromStorage,
+} from "../context/moviedb/MovieDBActions";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
-import { FaArrowLeft, FaTrash } from "react-icons/fa";
 
 function Movie() {
   const { movie, loading, dispatch } = useContext(MovieDBContext);
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     dispatch({ type: "SET_LOADING" });
@@ -41,7 +44,7 @@ function Movie() {
       year,
     } = movie.movieDetails;
 
-    const { submittedby, dateAdded , link} = movie.otherDetails;
+    const { submittedby, dateAdded, link } = movie.otherDetails;
 
     return (
       movie && (

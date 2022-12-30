@@ -1,26 +1,41 @@
 import React from "react";
-import { FaTrash } from "react-icons/fa";
-function MovieListItem({ movie }) {
+import { deleteMovieFromStorage } from "../../context/moviedb/MovieDBActions";
+function MovieListItem({ movie, deleteItem }) {
   const { title } = movie.movieDetails;
   const { submittedby } = movie.otherDetails;
   return (
-    <div className="w-full flex">
-      <input
+    <div
+      className="w-full flex tooltip tooltip-open tooltip-left tooltip-info bg-base-100"
+      data-tip={`${submittedby}`}
+    >
+      <button
         type="text"
-        value={title}
-        className="input input-bordered w-full"
+        className="input input-bordered w-[70%] btn btn-outline text-left justify-start "
         readonly
-      />
+      >
+        {" "}
+        {title || "Unknown"}
+      </button>
+      <div className="h-full align-middle w-[20%] justify-center text-center text-xl pt-2">
+        {submittedby}
+      </div>
       <div className="h-12 w-12">
         <input
           type="checkbox"
           className="z-50 checkbox checkbox-lg h-12 w-full p-1"
+          defaultChecked
         />
       </div>
 
-      <button className="btn btn-square">
+      <button
+        className="btn btn-square"
+        onClick={() => {
+          deleteMovieFromStorage(movie._id);
+          deleteItem(movie._id);
+        }}
+      >
         <svg
-          class="w-6 h-6"
+          className="w-6 h-6"
           width="100"
           height="100"
           viewBox="0 0 100 100"

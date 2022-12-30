@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PropagateLoader } from "react-spinners";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import ReactTurntable from "./TurntableComponent";
-import TurnTableOptions from "./TurnTableOptions";
 import "./TurntableStyles.css";
 
-function Turntable({ movieSelected }) {
-  const { loading, movieStorage } = useContext(MovieDBContext);
+function Turntable({ movieSelected, movieStorage }) {
+  const { loading } = useContext(MovieDBContext);
   const [prizes, setPrizes] = useState([]);
   let choices = [];
 
@@ -28,8 +27,8 @@ function Turntable({ movieSelected }) {
   if (!loading && prizes.length >= 2) {
     const options = {
       prizes,
-      width: 600,
-      height: 600,
+      width: 700,
+      height: 700,
       wheelColors: ["#0FA3B1", "#B5E2FA", "#F9F7F3", "#EDDEA4", "#1a202c"],
       primaryColor: "gray",
       secondaryColor: "#1a202c",
@@ -60,8 +59,8 @@ function Turntable({ movieSelected }) {
     };
 
     return (
-      <div className="h-full flex flex-col">
-        <div className="justify-center w-full mx-auto">
+      <div className="h-full flex">
+        <div className="justify-center mx-auto my-auto">
           <ReactTurntable {...options} />
         </div>
       </div>
@@ -69,8 +68,8 @@ function Turntable({ movieSelected }) {
   } else {
     return (
       <PropagateLoader
-        className="text-center mx-auto my-auto"
-        color="#6d3a9c"
+        className="h-full text-center align-middle"
+        color="#fff"
       />
     );
   }

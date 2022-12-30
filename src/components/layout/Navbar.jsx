@@ -36,7 +36,7 @@ function Navbar({ title }) {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="">
+                <Link to="/movielibrary" className="">
                   Movie library
                 </Link>
               </li>

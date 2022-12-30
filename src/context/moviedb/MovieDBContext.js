@@ -9,6 +9,7 @@ export const MovieDBProvider = ({children}) => {
         movie: {},
         calls: 0,
         loading: false,
+        isSearching: false,
         movieStorage: [],
     }
     const [state, dispatch] = useReducer(MovieDBReducer, initialState);

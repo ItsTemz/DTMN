@@ -27,6 +27,7 @@ const MovieDBReducer = (state, action) => {
       return {
         ...state,
         movies: [],
+        isSearching: false,
       };
     case "SET_MOVIESTORAGE":
       return {
@@ -38,6 +39,11 @@ const MovieDBReducer = (state, action) => {
         ...state,
         movie: action.payload,
         loading: false,
+      };
+    case "SET_SEARCHING_MODE":
+      return {
+        ...state,
+        isSearching: action.payload,
       };
     default:
       return state;
