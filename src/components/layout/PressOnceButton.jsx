@@ -5,7 +5,7 @@ function PressOnceButton({ onClick, icon }) {
 
   const styles = `btn ${pressed && "btn-disabled"}`;
   return (
-    <btn
+    <button
       className={styles}
       onClick={() => {
         onClick();
@@ -13,7 +13,7 @@ function PressOnceButton({ onClick, icon }) {
       }}
     >
       {icon}
-    </btn>
+    </button>
   );
 }
 

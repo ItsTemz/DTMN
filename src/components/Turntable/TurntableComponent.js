@@ -1,6 +1,6 @@
 import cls from "classnames";
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React, { Component, PureComponent } from "react";
 import seedrandom from "seedrandom";
 import ImageUtil, { isImageData } from "./Utils/imageUtil";
 // import * as Audio from "./Utils/TurntableSounds";
@@ -26,7 +26,7 @@ function decelerateExpo(t, b, c, d, e) {
 
 const prefix = "react-turntable";
 
-export default class ReactTurntable extends PureComponent {
+export default class ReactTurntable extends Component {
   state = {
     isRotate: false,
     startRotate: 0,
@@ -357,15 +357,6 @@ export default class ReactTurntable extends PureComponent {
   }
 
   drawBackColor(ctx, rad, bgColor) {
-    // ctx.fillStyle = bgColor
-    // ctx.beginPath()
-    // ctx.arc(this.centerX, this.centerY, this.R, start, end, false)
-    // ctx.arc(this.centerX, this.centerY, this.INSERT_R, end, start, true)
-    // ctx.fill()
-    // ctx.closePath()
-    // ctx.restore()
-    // ctx.save()
-
     ctx.fillStyle = bgColor;
     ctx.moveTo(0, 0);
     ctx.arc(0, 0, this.R, 0, rad);
@@ -452,13 +443,6 @@ export default class ReactTurntable extends PureComponent {
   }
 
   getCurrentPosition = () => {
-    // let startAngle = (this.startRotate * 180) / Math.PI,
-    //   awardAngle = (this.awardRotate * 180) / Math.PI,
-    //   pointerAngle = 90,
-    //   overAngle = (startAngle + pointerAngle) % 360,
-    //   restAngle = 360 - overAngle,
-    //   index = Math.floor(restAngle / awardAngle)
-    // return index
     const startAngle = (this.startRotate * 180) / Math.PI;
     const pointerAngle = 90;
     const overAngle = (startAngle + pointerAngle) % 360;
@@ -482,13 +466,6 @@ export default class ReactTurntable extends PureComponent {
   };
 
   getSelectedPrizeIndex = () => {
-    // let startAngle = (this.startRotate * 180) / Math.PI,
-    //   awardAngle = (this.awardRotate * 180) / Math.PI,
-    //   pointerAngle = 90,
-    //   overAngle = (startAngle + pointerAngle) % 360,
-    //   restAngle = 360 - overAngle,
-    //   index = Math.floor(restAngle / awardAngle)
-    // return index
     const startAngle = (this.startRotate * 180) / Math.PI;
     const pointerAngle = 90;
     const overAngle = (startAngle + pointerAngle) % 360;

@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import SearchedMovieListItem from "../layout/SearchedMovieListItem";
 import MovieListItem from "./MovieListItem";
 import MovieListNavbar from "./MovieListNavbar";
 
-function MovieList({ movieStorage, deleteItem, addItem }) {
+function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
   const { movies, isSearching } = useContext(MovieDBContext);
   return (
     <div className="h-[100%] w-full">
@@ -18,6 +18,7 @@ function MovieList({ movieStorage, deleteItem, addItem }) {
                   movie={movie}
                   key={movie._id}
                   deleteItem={deleteItem}
+                  hideItem={hideItem}
                 />
               ))}
             </div>
@@ -32,6 +33,7 @@ function MovieList({ movieStorage, deleteItem, addItem }) {
                       addItem={addItem}
                     />
                   );
+                return 0;
               })}
             </div>
           )}

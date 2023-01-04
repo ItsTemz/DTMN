@@ -14,7 +14,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/movie", async function (req, res) {
   const _id = req.query.id;
-  console.log(_id)
+  console.log(_id);
   await getMovie(_id)
     .then((movie) => {
       res.send(movie);
@@ -90,7 +90,8 @@ router.delete("/movies/all", async function (req, res) {
 
 const handleAddingMovie = async (content) => {
   const imdbID = content.imdbid;
-  const date = new Date().getUTCDate();
+  const date = new Date().toString();
+  console.log(date);
   const movieContent = {
     movieDetails: {
       title: content.title,
@@ -207,6 +208,8 @@ const completeMovieData = async (id, otherDetails) => {
 
     const mdaData = movieDatabaseAlternative.data;
     const mdlData = movieDatabaseList.data;
+    const date = new Date().toString();
+    console.log(date);
     const movie = {
       dbid: id,
       movieDetails: {
@@ -229,7 +232,7 @@ const completeMovieData = async (id, otherDetails) => {
       otherDetails: {
         submittedby: otherDetails.submittedby || otherDetails.user,
         link: otherDetails.link,
-        dateAdded: new Date().getDate,
+        dateAdded: date,
         watched: false,
       },
     };

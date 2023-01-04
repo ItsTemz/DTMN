@@ -1,14 +1,11 @@
 import { useContext, useState } from "react";
-import AlertContext from "../../context/alert/AlertContext";
 import { getMovies } from "../../context/moviedb/MovieDBActions";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
-import MovieItem from "../movies/MovieItem";
 
 function NavbarMovieSearch() {
   const [text, setText] = useState("");
-  const { loading, movies, dispatch } = useContext(MovieDBContext);
-  const { setAlert } = useContext(AlertContext);
-
+  const { movies, dispatch } = useContext(MovieDBContext);
+  
   const handleChange = (e) => setText(e.target.value);
   const handleSubmit = async (e) => {
     e.preventDefault();

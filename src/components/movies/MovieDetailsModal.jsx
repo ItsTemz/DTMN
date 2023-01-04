@@ -26,6 +26,9 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
     setOpen(false);
     handleModalClose();
   };
+
+  console.log(movie)
+  
   const {
     actors,
     backdrop,

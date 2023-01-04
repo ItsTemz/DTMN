@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { deleteMovieFromStorage } from "../../context/moviedb/MovieDBActions";
-function MovieListItem({ movie, deleteItem }) {
+function MovieListItem({ movie, deleteItem, hideItem }) {
   const { title } = movie.movieDetails;
   const { submittedby } = movie.otherDetails;
   return (
@@ -8,14 +9,14 @@ function MovieListItem({ movie, deleteItem }) {
       className="w-full flex tooltip tooltip-open tooltip-left tooltip-info bg-base-100"
       data-tip={`${submittedby}`}
     >
-      <button
+      <Link
         type="text"
         className="input input-bordered w-[70%] btn btn-outline text-left justify-start "
         readonly
+        to={`/movie/${movie._id}`}
       >
-        {" "}
         {title || "Unknown"}
-      </button>
+      </Link>
       <div className="h-full align-middle w-[20%] justify-center text-center text-xl pt-2">
         {submittedby}
       </div>
@@ -24,6 +25,7 @@ function MovieListItem({ movie, deleteItem }) {
           type="checkbox"
           className="z-50 checkbox checkbox-lg h-12 w-full p-1"
           defaultChecked
+          onChange={(e) => hideItem(movie, e.target.checked)}
         />
       </div>
 

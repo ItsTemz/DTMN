@@ -21,7 +21,9 @@ function Turntable({ movieSelected, movieStorage }) {
   }, [movieStorage]);
 
   const getWinner = (prize) => {
-    return movieStorage.find((movie) => movie.movieDetails.title === prize);
+    return movieStorage.find(
+      (movie) => movie.movieDetails.title.substring(0, 30).trim() === prize
+    );
   };
 
   if (!loading && prizes.length >= 2) {
@@ -54,6 +56,7 @@ function Turntable({ movieSelected, movieStorage }) {
       },
       onComplete(prize) {
         const winner = getWinner(prize);
+        console.log("winner: ", winner);
         movieSelected(winner);
       },
     };

@@ -10,6 +10,7 @@ function PickerWheelMenu() {
   const [winnerMovie, setWinnerMovie] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [storageItems, setStorageItems] = useState([]);
+  const [displayItems, setDisplayItems] = useState([]);
 
   const onWinnerSelected = (movie) => {
     setWinnerMovie(movie);
@@ -24,10 +25,6 @@ function PickerWheelMenu() {
     markMovieAsWatched(winnerMovie);
   };
 
-  useEffect(() => {
-    setStorageItems(movieStorage);
-  }, [movieStorage]);
-
   const deleteItem = (_id) => {
     setStorageItems(storageItems.filter((item) => item._id !== _id));
     alert("Item deleted");
@@ -35,7 +32,27 @@ function PickerWheelMenu() {
 
   const addItem = (item) => {
     setStorageItems(...storageItems, item);
-  }
+    setDisplayItems(storageItems);
+  };
+
+  const hideItems = (item, changeVal) => {
+    console.log(item);
+    if (!changeVal) {
+      setDisplayItems(displayItems.filter((i) => i._id !== item._id));
+      console.log(displayItems);
+    } else {
+      setDisplayItems(displayItems.concat(item));
+    }
+  };
+
+  useEffect(() => {
+    setStorageItems(movieStorage);
+    setDisplayItems(storageItems);
+  }, [movieStorage, storageItems]);
+
+  useEffect(() => {
+    setDisplayItems(displayItems);
+  }, [storageItems, displayItems]);
 
   return (
     <div className="h-[70%]">
@@ -53,14 +70,15 @@ function PickerWheelMenu() {
               movieStorage={storageItems}
               deleteItem={deleteItem}
               addItem={addItem}
+              hideItem={hideItems}
             />
           </div>
         )}
-        {storageItems && (
+        {displayItems && (
           <div className="flex-1">
             <Turntable
               movieSelected={onWinnerSelected}
-              movieStorage={storageItems}
+              movieStorage={displayItems}
             />
           </div>
         )}

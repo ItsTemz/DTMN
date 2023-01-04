@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import MovieLibrary from "../components/MovieLibrary/MovieLibrary";
+// import MovieLibrary from "../components/MovieLibrary/MovieLibrary";
 import PickerWheelMenu from "../components/PickerWheelMenu";
 import { getMoviesFromStorage } from "../context/moviedb/MovieDBActions";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
@@ -14,7 +14,7 @@ function Home() {
         payload: movies,
       });
     });
-  }, []);
+  }, [dispatch]);
   
   useEffect(() => {
     movieStorage.map((movie) => {

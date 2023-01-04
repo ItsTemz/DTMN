@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import ManualAdd from "../../pages/ManualAdd";
 import NavbarMovieSearch from "../layout/NavbarMovieSearch";
 
