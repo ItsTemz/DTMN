@@ -110,7 +110,7 @@ const handleAddingMovie = async (content) => {
       const foundMovie = await getMovie(imdbID);
       if (!foundMovie) {
         await addMovie(movie);
-        return true;
+        return movie;
       } else {
         return foundMovie;
       }
@@ -124,7 +124,7 @@ const handleAddingMovie = async (content) => {
       const foundEntry = await getEntry(entry);
       if (!foundEntry) {
         await addMovie(entry);
-        return true;
+        return entry;
       } else {
         return foundEntry;
       }
@@ -158,7 +158,12 @@ const updateMovie = async (data) => {
   try {
     await Movie.updateOne(
       { dbid: data },
-      { $set: { "otherDetails.watched": true } }
+      {
+        $set: {
+          "otherDetails.watched": true,
+          "otherDetails.dateWatched": new Date().toString(),
+        },
+      }
     );
     return true;
   } catch (err) {
