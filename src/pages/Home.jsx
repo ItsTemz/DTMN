@@ -1,34 +1,41 @@
 import { useContext, useEffect, useState } from "react";
-// import MovieLibrary from "../components/MovieLibrary/MovieLibrary";
+import ItemDatabaseNavbar from "../components/layout/PickerWheelMenuNavbar";
 import PickerWheelMenu from "../components/PickerWheelMenu";
-import { getMoviesFromStorage } from "../context/moviedb/MovieDBActions";
+import UserCarousel from "../components/Users/UserCarousel";
+import {
+  getCollections,
+  getMoviesFromStorage,
+  getUsers,
+} from "../context/moviedb/MovieDBActions";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
 
 function Home() {
-  const { movieStorage ,dispatch} = useContext(MovieDBContext);
-  const [choices, setChoices] = useState([]);
+  const { dispatch, activeCollection } = useContext(MovieDBContext);
+
   useEffect(() => {
-    getMoviesFromStorage().then((movies) => {
+    getCollections().then((collections) => {
+      dispatch({ type: "SET_COLLECTIONS_ARRAY", payload: collections });
+    });
+    getMoviesFromStorage(activeCollection).then((movies) => {
       dispatch({
         type: "SET_MOVIESTORAGE",
         payload: movies,
       });
     });
-  }, [dispatch]);
-  
-  useEffect(() => {
-    movieStorage.map((movie) => {
-      setChoices(...choices, movie.movieDetails.title);
-      return 0;
+    getUsers().then((users) => {
+      dispatch({type: "SET_USERS", payload: users});
     });
-  }, [movieStorage, choices]);
+  }, [dispatch, activeCollection]);
 
   return (
     <div>
       <div>
+        <ItemDatabaseNavbar />
+      </div>
+      <div>
         <PickerWheelMenu />
       </div>
-      {/* <MovieLibrary/> */}
+      <UserCarousel />
     </div>
   );
 }

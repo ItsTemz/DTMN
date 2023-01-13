@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import Turntable from "../components/Turntable/Turntable";
-import { markMovieAsWatched } from "../context/moviedb/MovieDBActions";
+import {
+  getMoviesFromStorage,
+  markMovieAsWatched,
+} from "../context/moviedb/MovieDBActions";
 import MovieDBContext from "../context/moviedb/MovieDBContext";
 import MovieList from "./MovieList/MovieList";
 import MovieDetailsModal from "./movies/MovieDetailsModal";
 
 function PickerWheelMenu() {
-  const { movieStorage } = useContext(MovieDBContext);
+  const { movieStorage, displayItems, activeCollection, dispatch } = useContext(MovieDBContext);
   const [winnerMovie, setWinnerMovie] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [storageItems, setStorageItems] = useState([]);
-  const [displayItems, setDisplayItems] = useState([]);
 
   const onWinnerSelected = (movie) => {
     setWinnerMovie(movie);
@@ -27,32 +29,29 @@ function PickerWheelMenu() {
 
   const deleteItem = (_id) => {
     setStorageItems(storageItems.filter((item) => item._id !== _id));
-    alert("Item deleted");
   };
 
   const addItem = (item) => {
-    setStorageItems(...storageItems, item);
-    setDisplayItems(storageItems);
-  };
-
-  const hideItems = (item, changeVal) => {
-    console.log(item);
-    if (!changeVal) {
-      setDisplayItems(displayItems.filter((i) => i._id !== item._id));
-      console.log(displayItems);
-    } else {
-      setDisplayItems(displayItems.concat(item));
-    }
+    setStorageItems([...storageItems, item]);
+    dispatch({ type: "UPDATE_STORAGE_UI", payload: storageItems });
+    window.location.reload();
   };
 
   useEffect(() => {
-    setStorageItems(movieStorage);
-    setDisplayItems(storageItems);
-  }, [movieStorage, storageItems]);
+    setStorageItems(
+      movieStorage.filter((item) => item.otherDetails.watched !== true)
+    );
+    dispatch({ type: "INIT_STORAGE_UI", payload: storageItems });
+  }, [dispatch, movieStorage, storageItems, displayItems, activeCollection]);
 
   useEffect(() => {
-    setDisplayItems(displayItems);
-  }, [storageItems, displayItems]);
+    getMoviesFromStorage(activeCollection).then((movies) => {
+      dispatch({
+        type: "SET_MOVIESTORAGE",
+        payload: movies,
+      });
+    });
+  }, [activeCollection]);
 
   return (
     <div className="h-[70%]">
@@ -70,7 +69,6 @@ function PickerWheelMenu() {
               movieStorage={storageItems}
               deleteItem={deleteItem}
               addItem={addItem}
-              hideItem={hideItems}
             />
           </div>
         )}

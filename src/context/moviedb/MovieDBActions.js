@@ -1,8 +1,9 @@
 import axios from "axios";
 import { io } from "socket.io-client";
-const DTMN_API_URL = "http://127.0.0.1:3001";
 
-const socket = io.connect("http://localhost:3001");
+const DTMN_API_URL = window.env.DTMN_API_URL;
+const X_RAPIDAPI_KEY = window.env.X_RAPIDAPI_KEY;
+const socket = io.connect(DTMN_API_URL);
 
 // client-side
 socket.on("connect", () => {
@@ -11,6 +12,22 @@ socket.on("connect", () => {
 
 export const NotifyDiscord = async (movie) => {
   socket.emit("notify_next_watch", movie);
+};
+
+export const setMovieRating = async (content) => {
+  const data = {
+    _id: content._id,
+    rating: content.rating,
+    imdbID: content.imdbID,
+  };
+  await axios.put(`${DTMN_API_URL}/item/rating`, data).then((response) => {
+    if (response.data === true) {
+      alert("Successfully Updated on Database");
+    } else {
+      alert("Movie already marked as watched on the database");
+    }
+    return response.data;
+  });
 };
 
 export const markMovieAsWatched = async (movie) => {
@@ -25,6 +42,28 @@ export const markMovieAsWatched = async (movie) => {
   });
 };
 
+export const getCollections = async () =>{
+  const collections = axios.create({
+    baseURL: `${DTMN_API_URL}/collections`,
+  });
+
+  const response = await collections.get();
+  return response.data;
+};
+
+export const deleteCollection = async (collectionName) => {
+  await axios
+    .delete(`${DTMN_API_URL}/collection/${collectionName}`)
+    .then((response) => {
+      if (response.data === true) {
+        alert("Successfully Deleted collection");
+      } else {
+        alert("Collection doesn't exist");
+      }
+      return response.data;
+    });
+};
+
 export const getMovies = async (movie) => {
   const movieDB = axios.create({
     baseURL: "https://movie-database-alternative.p.rapidapi.com/",
@@ -34,7 +73,7 @@ export const getMovies = async (movie) => {
       page: "1",
     },
     headers: {
-      "X-RapidAPI-Key": "e727007857mshc26c548468a87f4p1952bejsnab5b0a0f6358",
+      "X-RapidAPI-Key": X_RAPIDAPI_KEY,
       "X-RapidAPI-Host": "movie-database-alternative.p.rapidapi.com",
     },
   });
@@ -51,7 +90,7 @@ export const getDetailedMovie = async (movie) => {
       i: `${movie.imdbID}`,
     },
     headers: {
-      "X-RapidAPI-Key": "e727007857mshc26c548468a87f4p1952bejsnab5b0a0f6358",
+      "X-RapidAPI-Key": X_RAPIDAPI_KEY,
       "X-RapidAPI-Host": "movie-database-alternative.p.rapidapi.com",
     },
   });
@@ -78,8 +117,8 @@ export const addMovieToStorage = async (movie) => {
     backdrop: movie.Poster,
     submittedby: "Admin",
   };
-  await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
-    if (response.data === true) {
+  return await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
+    if (response.data) {
       alert("Successfully Added to the database");
     } else {
       alert("Movie already exists on the database");
@@ -88,13 +127,13 @@ export const addMovieToStorage = async (movie) => {
   });
 };
 
-export const addCustomEntry = async (entry) =>{
+export const addCustomEntry = async (entry) => {
   const data = {
     title: entry.title,
     link: entry.link,
     submittedby: entry.user || "unknown",
-  }
-  await axios.post(`${DTMN_API_URL}/entry`, data).then((response) => {
+  };
+  return await axios.post(`${DTMN_API_URL}/entry`, data).then((response) => {
     if (response.data === true) {
       alert("Added entry to the database");
     } else {
@@ -102,15 +141,53 @@ export const addCustomEntry = async (entry) =>{
     }
     return response.data;
   });
-}
+};
 
-export const getMoviesFromStorage = async () => {
+export const getMoviesFromStorage = async (collectionName) => {
   const movies = axios.create({
     baseURL: `${DTMN_API_URL}/movies`,
+    params: {
+      collectionName: collectionName || 'Movie',
+    }
   });
 
   const response = await movies.get();
   return response.data;
+};
+
+export const getUsers = async () => {
+  const users = axios.create({
+    baseURL: `${DTMN_API_URL}/users`,
+  });
+
+  const response = await users.get();
+  return response.data;
+};
+
+export const getUser = async (username) => {
+  const user = axios.create({
+    baseURL: `${DTMN_API_URL}/user`,
+    params:{
+      username: username
+    }
+  });
+
+  const response = await user.get();
+  return response.data;
+};
+
+export const createCollection = async (collectionName) => {
+
+  return await axios
+    .post(`${DTMN_API_URL}/createCollection`, {collectionName: collectionName})
+    .then((response) => {
+      if (response.data === true) {
+        alert("Created New Collection");
+      } else {
+        alert("Collection already exists on the database");
+      }
+      return response.data;
+    });
 };
 
 export const getMovieFromStorage = async (id) => {
@@ -127,14 +204,13 @@ export const getMovieFromStorage = async (id) => {
 };
 
 export const deleteMovieFromStorage = async (id) => {
-  await axios
-    .delete(`${DTMN_API_URL}/movie/${id}`)
-    .then((response) => {
-      if (response.data === true) {
-        alert("Successfully Deleted Movie");
-      } else {
-        alert("Movie doesn't exist");
-      }
-      return response.data;
-    });
+  await axios.delete(`${DTMN_API_URL}/movie/${id}`).then((response) => {
+    if (response.data === true) {
+      alert("Successfully Deleted Movie");
+    } else {
+      alert("Movie doesn't exist");
+    }
+    return response.data;
+  });
 };
+

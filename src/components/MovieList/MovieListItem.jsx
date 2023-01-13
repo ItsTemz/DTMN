@@ -1,33 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { deleteMovieFromStorage } from "../../context/moviedb/MovieDBActions";
+import UserChip from "../Users/UserChip";
 function MovieListItem({ movie, deleteItem, hideItem }) {
   const { title } = movie.movieDetails;
   const { submittedby } = movie.otherDetails;
   return (
-    <div
-      className="w-full flex tooltip tooltip-open tooltip-left tooltip-info bg-base-100"
-      data-tip={`${submittedby}`}
-    >
+    <div className="w-full flex bg-base-100 p-1">
       <Link
         type="text"
-        className="input input-bordered w-[70%] btn btn-outline text-left justify-start "
+        className="input input-bordered w-full btn text-left justify-start "
         readonly
         to={`/movie/${movie._id}`}
       >
         {title || "Unknown"}
       </Link>
-      <div className="h-full align-middle w-[20%] justify-center text-center text-xl pt-2">
-        {submittedby}
+      <div className="h-full m-auto px-1">
+        <UserChip username={submittedby} />
       </div>
-      <div className="h-12 w-12">
+      {/* <div className="h-12 w-12">
         <input
           type="checkbox"
           className="z-50 checkbox checkbox-lg h-12 w-full p-1"
           defaultChecked
           onChange={(e) => hideItem(movie, e.target.checked)}
         />
-      </div>
+      </div> */}
 
       <button
         className="btn btn-square"

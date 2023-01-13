@@ -56,6 +56,9 @@ const movieSchema = new mongoose.Schema({
     dateWatched: {
       type: String,
     },
+    duckTalkRating: {
+      type: Number,
+    },
     watched: {
       type: Boolean,
     },
@@ -68,4 +71,4 @@ const movieSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Movie", movieSchema);
+module.exports = movieSchema;

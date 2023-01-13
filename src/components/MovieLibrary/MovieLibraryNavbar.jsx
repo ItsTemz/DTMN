@@ -5,7 +5,7 @@ import ListItem from "../../components/layout/assets/ListItem";
 import AlertContext from "../../context/alert/AlertContext";
 import filterItems from "../layout/assets/FilterScripts";
 
-function MovieLibraryNavbar({
+function LibraryNavbar({
   numberOfMovies,
   searchMovie,
   movieStorage,
@@ -24,9 +24,8 @@ function MovieLibraryNavbar({
 
     const movieGenres = new filterItems(movieStorage);
     setKnownGenres(movieGenres.getGenres());
+  }, []);
 
-  },[])
-  
   const handleChange = (e) => {
     setText(e.target.value);
     searchMovie(e.target.value);
@@ -42,14 +41,14 @@ function MovieLibraryNavbar({
   };
 
   const handleFilterByUser = (user) => {
-    applyFilter(user)
-  }
+    applyFilter(user);
+  };
 
   return (
     <div className="navbar bg-base-100 shadow-2xl my-1 rounded-lg z-50">
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl">
-          Movie Library ({numberOfMovies})
+          Library ({numberOfMovies})
         </a>
       </div>
       <div className="flex-none">
@@ -101,32 +100,18 @@ function MovieLibraryNavbar({
               </li>
             </ul>
           </li>
-          <li tabIndex={0}>
-            <a>
-              Sort
-              <FaSort />
-            </a>
-            <ul className="p-2 bg-base-100">
-              <li>
-                <a>Submenu 1</a>
-              </li>
-              <li>
-                <a>Submenu 2</a>
-              </li>
-            </ul>
-          </li>
         </ul>
       </div>
     </div>
   );
 }
 
-MovieLibraryNavbar.defaultProps = {
+LibraryNavbar.defaultProps = {
   numberOfMovies: 0,
 };
 
-MovieLibraryNavbar.propTypes = {
+LibraryNavbar.propTypes = {
   numberOfMovies: PropTypes.number,
 };
 
-export default MovieLibraryNavbar;
+export default LibraryNavbar;

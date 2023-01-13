@@ -5,13 +5,17 @@ const MovieDBContext = createContext();
 
 export const MovieDBProvider = ({children}) => {
     const initialState = {
-        movies: [],
-        movie: {},
-        calls: 0,
-        loading: false,
-        isSearching: false,
-        movieStorage: [],
-    }
+      movies: [],
+      movie: {},
+      calls: 0,
+      loading: false,
+      isSearching: false,
+      movieStorage: [],
+      displayItems: [],
+      collectionsArray: [],
+      activeCollection:'Movie',
+      users: [],
+    };
     const [state, dispatch] = useReducer(MovieDBReducer, initialState);
 
     return <MovieDBContext.Provider value={

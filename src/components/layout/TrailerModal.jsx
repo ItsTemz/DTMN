@@ -21,12 +21,12 @@ function TrailerModal(props) {
 
   return (
     <div>
-      <button onClick={handleOpen} className="btn btn-outline btn-2xl w-44">
-        Play Trailer
+      <button onClick={handleOpen} className="btn btn-outline btn-2xl">
+        {props.buttonText}
       </button>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleClose} 
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

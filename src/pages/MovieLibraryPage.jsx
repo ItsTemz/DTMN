@@ -1,9 +1,8 @@
-import React from 'react'
-import MovieLibrary from '../components/MovieLibrary/MovieLibrary';
+import React from "react";
+import Library from "../components/MovieLibrary/MovieLibrary";
 
-
-function MovieLibraryPage() {
-  return <MovieLibrary />;
+function LibraryPage() {
+  return <Library />;
 }
 
-export default MovieLibraryPage;
+export default LibraryPage;

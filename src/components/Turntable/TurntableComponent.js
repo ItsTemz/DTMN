@@ -1,11 +1,10 @@
 import cls from "classnames";
 import PropTypes from "prop-types";
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import seedrandom from "seedrandom";
-import ImageUtil, { isImageData } from "./Utils/imageUtil";
-// import * as Audio from "./Utils/TurntableSounds";
 import ButtonClick from "./Assets/Button.mp3";
 import Tick from "./Assets/Tick.mp3";
+import ImageUtil, { isImageData } from "./Utils/imageUtil";
 // export function easeOut(t, b, c, d) {
 //   if ((t /= d / 2) < 1) return (c / 2) * t * t + b;
 //   return (-c / 2) * (--t * (t - 2) - 1) + b;
@@ -44,7 +43,7 @@ export default class ReactTurntable extends Component {
     height: 500,
     speed: 30,
     duration: 6000,
-    prizes: [],
+    prizes: ["placeholder 1", "placeholder 2", "placeholder 3"],
     clickText: "SPIN!",
     wheelColors: ["#2b580c", "#f7b71d", "#afa939", "#fdef96"],
     primaryColor: "#83AF9B",
@@ -79,6 +78,7 @@ export default class ReactTurntable extends Component {
     hiddenButton: PropTypes.bool,
     music: PropTypes.object,
   };
+
   render() {
     const {
       clickText,
@@ -89,6 +89,7 @@ export default class ReactTurntable extends Component {
       hiddenButton,
       manualStop,
     } = this.props;
+    
     const { finishRender, isRotate } = this.state;
     const styles = { ...style, width, height };
     return (

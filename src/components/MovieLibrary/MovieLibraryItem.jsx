@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
+import UserChip from "../Users/UserChip";
 
 function MovieLibraryItem({ movie }) {
   const { loading} = useContext(MovieDBContext);
@@ -21,8 +22,8 @@ function MovieLibraryItem({ movie }) {
       const { submittedby } = contributorDetails;
       return (
         <div className="card bg-base-100 shadow-xl image-full w-full">
-          <span className="absolute badge badge- badge-outline z-10 right-4 top-5 text-lg h-10 font-bold">
-            {submittedby}
+          <span className="absolute z-10 right-4 top-5 text-lg h-10 font-bold">
+              <UserChip username={submittedby}/>
           </span>
           <figure className="">
             <img src={poster || backdrop} alt="backdrop" />

@@ -54,41 +54,13 @@ function Navbar({ title }) {
             {title}
           </Link>
         </div>
-        <div className="navbar-end">
-          <button className="btn btn-ghost btn-circle">
-            <Link to="/search" className="btn btn-ghost btn-sm rounderd-btn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </Link>
-          </button>
-          {/* Settings Button */}
-          <div
-            className="tooltip tooltip-bottom tooltip-accent"
-            data-tip="Add Custom Entry"
-          >
-            <Link to="/addEntry" className="btn btn-circle btn-3xl">
-              <FaPlus />
-            </Link>
-          </div>
-        </div>
+        <div className="navbar-end"></div>
       </div>
     </div>
   );
 }
 Navbar.defaultProps = {
-  title: "Duck Talk Movie Night",
+  title: "Duck Talk Wheel Picker",
 };
 
 Navbar.propTypes = {

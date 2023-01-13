@@ -1,7 +1,8 @@
 import { Box, Button, Link, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft, FaDiscord, FaEye,FaRotate } from "react-icons/fa";
+import { FaArrowLeft, FaDiscord, FaEye, FaRotate } from "react-icons/fa";
+import Moment from "react-moment";
 import { PropagateLoader } from "react-spinners";
 import { NotifyDiscord } from "../../context/moviedb/MovieDBActions";
 import PressOnceButton from "../layout/PressOnceButton";
@@ -26,9 +27,6 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
     setOpen(false);
     handleModalClose();
   };
-
-  console.log(movie)
-  
   const {
     actors,
     backdrop,
@@ -44,7 +42,7 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
     year,
   } = movie.movieDetails;
 
-  const { submittedby, dateAdded ,link} = movie.otherDetails;
+  const { submittedby, dateAdded, link } = movie.otherDetails;
 
   return (
     <Modal
@@ -172,7 +170,11 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
                 </span>
               )}
 
-              <span></span>
+              <span>
+                Added by
+                <span className="font-bold"> {submittedby} </span> on{" "}
+                <Moment format="MMMM Do YYYY">{dateAdded}</Moment>
+              </span>
             </div>
           </div>
         </div>

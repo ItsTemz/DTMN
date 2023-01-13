@@ -45,6 +45,40 @@ const MovieDBReducer = (state, action) => {
         ...state,
         isSearching: action.payload,
       };
+    case "UPDATE_STORAGE_UI":
+      return {
+        ...state,
+        displayItems: action.payload,
+      };
+    case "INIT_STORAGE_UI":
+      return {
+        ...state,
+        displayItems: action.payload,
+      };
+    case "SET_ACTIVE_COLLECTION":
+      return {
+        ...state,
+        activeCollection: action.payload,
+      };
+    case "SET_COLLECTIONS_ARRAY":
+      return {
+        ...state,
+        collectionsArray: action.payload,
+      };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.payload,
+      };
+    case "DELETE_COLLECTION":
+      return {
+        ...state,
+        collectionsArray: [
+          state.collectionsArray.filter(() =>
+            state.collectionsArray.includes(action.payload)
+          ),
+        ],
+      };
     default:
       return state;
   }

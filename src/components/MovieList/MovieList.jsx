@@ -1,16 +1,16 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import SearchedMovieListItem from "../layout/SearchedMovieListItem";
 import MovieListItem from "./MovieListItem";
-import MovieListNavbar from "./MovieListNavbar";
+import ListNavbar from "./MovieListNavbar";
 
 function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
   const { movies, isSearching } = useContext(MovieDBContext);
   return (
     <div className="h-[100%] w-full">
-      <MovieListNavbar numOfItems={movieStorage.length} />
-      <div className="w-full h-[90%] overflow-y-scroll overflow-x-clip list">
-        <div className="bg-gray-900 border-gray-900 rounded-lg my-1 p-1">
+      <ListNavbar numOfItems={movieStorage.length} />
+      <div className="w-full h-[90%] overflow-y-scroll overflow-x-clip list bg-base-100  rounded-lg my-1 p-1">
+        <div className="">
           {!isSearching ? (
             <div className="flex flex-col-reverse">
               {movieStorage.map((movie) => (
