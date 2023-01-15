@@ -13,7 +13,7 @@ export const MovieDBProvider = ({children}) => {
       movieStorage: [],
       displayItems: [],
       collectionsArray: [],
-      activeCollection:'Movie',
+      activeCollection: localStorage.getItem("active_collection") || 'Movie',
       users: [],
     };
     const [state, dispatch] = useReducer(MovieDBReducer, initialState);

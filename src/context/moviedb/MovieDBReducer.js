@@ -56,6 +56,7 @@ const MovieDBReducer = (state, action) => {
         displayItems: action.payload,
       };
     case "SET_ACTIVE_COLLECTION":
+      localStorage.setItem("active_collection", action.payload);
       return {
         ...state,
         activeCollection: action.payload,

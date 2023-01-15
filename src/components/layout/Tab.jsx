@@ -30,6 +30,7 @@ function Tab({ TabName }) {
 
   const handleClick = () => {
     dispatch({ type: "SET_ACTIVE_COLLECTION", payload: TabName });
+    window.location.reload();
   };
 
   const handleDelete = () => {

@@ -40,11 +40,9 @@ router.get("/", function (req, res, next) {
 
 router.get("/movie", async function (req, res) {
   const _id = req.query.id;
-  console.log(_id);
   await getMovie(_id)
     .then((movie) => {
       res.send(movie);
-      console.log(movie);
     })
     .catch((error) => {
       res.send(error);
@@ -53,7 +51,7 @@ router.get("/movie", async function (req, res) {
 
 router.get("/movies", async function (req, res) {
   const collection = req.query.collectionName;
-  setActiveCollection(collection);
+  if (collection) setActiveCollection(collection);
   const movieList = await ActiveCollection.find();
   res.send(movieList);
 });
@@ -76,7 +74,10 @@ router.get("/collections", async function (req, res) {
       console.log(err);
       return;
     }
-    res.send(collections);
+    const outCollections = collections.filter(
+      (collection) => collection.name !== "users"
+    );
+    res.send(outCollections);
   });
 });
 
@@ -103,7 +104,6 @@ router.post("/entry", async function (req, res) {
 
 router.put("/movie", async function (req, res) {
   const content = req.body;
-  console.log(content);
   const updatedMovie = await updateMovie(content.dbid);
   if (updatedMovie === true) {
     res.send(true);
@@ -124,7 +124,7 @@ router.put("/item/rating", async function (req, res) {
 
 const rateItem = async (content) => {
   try {
-    await ActiveCollection.updateOne(
+    await ActiveCollection.findOneAndUpdate(
       { dbid: content.imdbID },
       {
         $set: {
@@ -199,7 +199,7 @@ const handleAddingMovie = async (content) => {
       const foundMovie = await getMovie(imdbID);
       if (!foundMovie) {
         await addMovie(movie);
-        await updateUserWithMovie(movie.otherDetails.submittedby, movie);
+        //await updateUserWithMovie(movie.otherDetails.submittedby, movie);
         return movie;
       } else {
         return foundMovie;
@@ -236,7 +236,6 @@ const getEntry = async (entry) => {
 };
 
 const getUsers = async () => {
-  addUser();
   populateUserMovies();
   const userlist = await User.find();
   return userlist;
@@ -256,35 +255,55 @@ const addUser = async (username) => {
     userTitle: "",
     userImage: "https://placeimg.com/192/192/people",
   };
-  if(username !== ''){
-    return await User.findOne({ username: username }).then(
-      async (foundUser) => {
-        if (!foundUser) {
-          try {
-            await User.create(defaultUser);
-            return true;
-          } catch (e) {
-            console.log(e);
-          }
-        } else {
-          return false;
-        }
-      }
-    );
-  }
+
+   if (username !== "") {
+     try {
+       await User.findOneAndUpdate(
+         { username },
+         { $setOnInsert: defaultUser },
+         { upsert: true, new: true }
+       );
+       return true;
+     } catch (error) {
+       console.log(error);
+     }
+   }
 };
 
-const updateUserWithMovie = async (user, movie) =>{
-  await addUser(user);
-  await User.findOne({ addedMovies: { $in: [movie._id] } });
-  await User.updateOne(
-    { username: user },
-    {
-      $push: {
-        addedMovies: movie,
-      },
+const updateUserWithMovie = async (user, movie) => {
+  await User.findOne({ username: user }).then(async (foundUser) => {
+    if (!foundUser) {
+      await addUser(user);
     }
+    try {
+      await User.findOneAndUpdate(
+        { _id: foundUser._id },
+        { $addToSet: { addedMovies: movie } },
+        { new: true }
+      );
+      calculateUserRating(foundUser._id);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+
+const calculateUserRating = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const watchedMovies = user.addedMovies.filter(
+    (movie) => movie.otherDetails.watched
   );
+  const ratings = watchedMovies.map(
+    (movie) => movie.otherDetails.duckTalkRating
+  );
+  if (ratings.length === 0) return 0;
+  const totalRating = ratings.reduce((a, b) => a + b, 0);
+  const averageRating = totalRating / ratings.length;
+  await User.findByIdAndUpdate(userId, { rating: averageRating });
+  return averageRating;
 };
 
 const populateUserMovies = async () => {
@@ -323,7 +342,7 @@ const updateMovie = async (data) => {
 
 const getMovie = async (id) => {
   try {
-    const foundMovie = await ActiveCollection.findOne({ dbid: id });
+    const foundMovie = await ActiveCollection.findOne({ _id: id });
     return foundMovie;
   } catch (error) {
     console.log(error);
@@ -400,4 +419,3 @@ module.exports = router;
 const clearDB = async () => {
   await ActiveCollection.deleteMany({});
 };
-

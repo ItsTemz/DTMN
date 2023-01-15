@@ -12,19 +12,32 @@ import MovieDBContext from "../context/moviedb/MovieDBContext";
 function Home() {
   const { dispatch, activeCollection } = useContext(MovieDBContext);
 
+
   useEffect(() => {
+    
     getCollections().then((collections) => {
       dispatch({ type: "SET_COLLECTIONS_ARRAY", payload: collections });
     });
+
+    const storedActiveCollection = localStorage.getItem("active_collection");
+    if (storedActiveCollection) {
+      dispatch({
+        type: "SET_ACTIVE_COLLECTION",
+        payload: storedActiveCollection,
+      });
+    }
+
     getMoviesFromStorage(activeCollection).then((movies) => {
       dispatch({
         type: "SET_MOVIESTORAGE",
         payload: movies,
       });
     });
+
     getUsers().then((users) => {
       dispatch({type: "SET_USERS", payload: users});
     });
+
   }, [dispatch, activeCollection]);
 
   return (

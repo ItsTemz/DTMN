@@ -11,12 +11,11 @@ const styles = {
 };
 
 function Turntable({ movieSelected, movieStorage }) {
-  const { loading , activeCollection} = useContext(MovieDBContext);
+  const { loading, activeCollection } = useContext(MovieDBContext);
   const [prizes, setPrizes] = useState([]);
   let choices = [];
 
   useEffect(() => {
-    
     for (let i = 0; i < movieStorage.length; i++) {
       if (
         !choices.includes(movieStorage[i].movieDetails.title) &&
@@ -28,7 +27,6 @@ function Turntable({ movieSelected, movieStorage }) {
       }
     }
     setPrizes(choices);
-
   }, [movieStorage, activeCollection]);
 
   const getWinner = (prize) => {

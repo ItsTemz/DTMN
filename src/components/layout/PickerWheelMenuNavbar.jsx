@@ -22,6 +22,7 @@ function ItemDatabaseNavbar() {
   const handleCreate = (newCollection) => {
     createCollection(newCollection);
     dispatch({ type: "SET_ACTIVE_COLLECTION", payload: newCollection });
+    window.location.reload();
   };
 
   return (

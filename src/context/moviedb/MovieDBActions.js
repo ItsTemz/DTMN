@@ -96,7 +96,6 @@ export const getDetailedMovie = async (movie) => {
   });
 
   const response = await movieDB.get();
-  //console.log(response.data);
   return response.data;
 };
 
@@ -118,10 +117,10 @@ export const addMovieToStorage = async (movie) => {
     submittedby: "Admin",
   };
   return await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
-    if (response.data) {
+    if (response.data.movieDetails.title !== data.title) {
       alert("Successfully Added to the database");
     } else {
-      alert("Movie already exists on the database");
+      alert("Movie already exists");
     }
     return response.data;
   });
