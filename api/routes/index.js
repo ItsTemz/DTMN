@@ -53,6 +53,7 @@ router.get("/movies", async function (req, res) {
   const collection = req.query.collectionName;
   if (collection) setActiveCollection(collection);
   const movieList = await ActiveCollection.find();
+  initializeUser();
   res.send(movieList);
 });
 
@@ -83,6 +84,7 @@ router.get("/collections", async function (req, res) {
 
 router.get("/users", async function (req, res) {
   const users = await getUsers();
+  initializeUser();
   res.send(users);
 });
 
@@ -122,33 +124,6 @@ router.put("/item/rating", async function (req, res) {
   }
 });
 
-const rateItem = async (content) => {
-  try {
-    await ActiveCollection.findOneAndUpdate(
-      { dbid: content.imdbID },
-      {
-        $set: {
-          "otherDetails.duckTalkRating": content.rating,
-        },
-      }
-    );
-    updateMovie(content.imdbID);
-    return true;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const deleteMovie = async (id) => {
-  console.log(id);
-  try {
-    await ActiveCollection.findOneAndDelete({ _id: id });
-    return true;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 router.delete("/movie/:id", async function (req, res) {
   const id = req.params.id;
   const deletedMovie = await deleteMovie(id);
@@ -178,6 +153,37 @@ router.delete("/collection/:collection", async function (req, res) {
   });
 });
 
+const initializeUser = async () => {
+  populateUserMovies();
+};
+
+const rateItem = async (content) => {
+  try {
+    await ActiveCollection.findOneAndUpdate(
+      { dbid: content.imdbID },
+      {
+        $set: {
+          "otherDetails.duckTalkRating": content.rating,
+        },
+      }
+    );
+    updateMovie(content.imdbID);
+    return true;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteMovie = async (id) => {
+  console.log(id);
+  try {
+    await ActiveCollection.findOneAndDelete({ _id: id });
+    return true;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const handleAddingMovie = async (content) => {
   const imdbID = content.imdbid;
   const date = new Date().toString();
@@ -199,7 +205,7 @@ const handleAddingMovie = async (content) => {
       const foundMovie = await getMovie(imdbID);
       if (!foundMovie) {
         await addMovie(movie);
-        //await updateUserWithMovie(movie.otherDetails.submittedby, movie);
+        await addMovieToUser(movie.otherDetails.submittedby, movie);
         return movie;
       } else {
         return foundMovie;
@@ -236,7 +242,6 @@ const getEntry = async (entry) => {
 };
 
 const getUsers = async () => {
-  populateUserMovies();
   const userlist = await User.find();
   return userlist;
 };
@@ -256,36 +261,50 @@ const addUser = async (username) => {
     userImage: "https://placeimg.com/192/192/people",
   };
 
-   if (username !== "") {
-     try {
-       await User.findOneAndUpdate(
-         { username },
-         { $setOnInsert: defaultUser },
-         { upsert: true, new: true }
-       );
-       return true;
-     } catch (error) {
-       console.log(error);
-     }
-   }
-};
-
-const updateUserWithMovie = async (user, movie) => {
-  await User.findOne({ username: user }).then(async (foundUser) => {
-    if (!foundUser) {
-      await addUser(user);
-    }
+  if (username !== "") {
     try {
       await User.findOneAndUpdate(
-        { _id: foundUser._id },
-        { $addToSet: { addedMovies: movie } },
-        { new: true }
+        { username },
+        { $setOnInsert: defaultUser },
+        { upsert: true, new: true }
       );
-      calculateUserRating(foundUser._id);
+      return true;
     } catch (error) {
       console.log(error);
     }
+  }
+};
+
+const addMovieToUser = async (username, movie) => {
+  await User.findOne({ username: username }).then(async (foundUser) => {
+    if (!foundUser) {
+      await addUser(username);
+    }
+    try {
+      // Check if the movie already exists in the user's addedMovies array
+      const user = await User.findOne({ username: username });
+      const index = user.addedMovies.findIndex(
+        (addedMovie) => addedMovie.dbid === movie.dbid
+      );
+      if (index !== -1) {
+        //update the movie in the user's addedMovies array
+        user.addedMovies[index] = movie;
+        console.log("Movie updated in user addedMovies array");
+      } else {
+        // Add the movie to the user's addedMovies array
+        user.addedMovies.push(movie);
+        console.log("Movie added to user addedMovies array");
+      }
+      await user.save();
+
+      calculateUserRating(foundUser._id);
+      
+      return true;
+    } catch (err) {
+      console.error(err);
+    }
   });
+
 };
 
 const calculateUserRating = async (userId) => {
@@ -309,7 +328,7 @@ const calculateUserRating = async (userId) => {
 const populateUserMovies = async () => {
   await ActiveCollection.find().then((movieList) => {
     movieList.map((movie) => {
-      return updateUserWithMovie(movie.otherDetails.submittedby, movie);
+      return addMovieToUser(movie.otherDetails.submittedby, movie);
     });
   });
 };
@@ -419,3 +438,4 @@ module.exports = router;
 const clearDB = async () => {
   await ActiveCollection.deleteMany({});
 };
+
