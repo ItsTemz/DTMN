@@ -7,6 +7,7 @@ import { PropagateLoader } from "react-spinners";
 import { NotifyDiscord } from "../../context/moviedb/MovieDBActions";
 import PressOnceButton from "../layout/PressOnceButton";
 import TrailerModal from "../layout/TrailerModal";
+import UserChip from "../Users/UserChip";
 
 const style = {
   position: "absolute",
@@ -52,7 +53,7 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
       aria-describedby="modal-modal-description"
     >
       <div
-        className="h-[90%] bg-slate-900 image-cover card flex flex-col bg-cover bg-no-repeat bg-center shadow-3xl bg-blur "
+        className="h-[90%] bg-slate-900 image-cover card flex flex-col bg-cover bg-no-repeat bg-center shadow-3xl bg-blur text-base-100"
         style={{
           ...style,
           backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.0), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1)) ,url(${backdrop})`,
@@ -68,7 +69,7 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
             </button>
             <div className="h-[25%] absolute bottom-64 flex flex-col">
               <div className="my-5">
-                <h1 className="text-5xl">{title}</h1>
+                <h1 className="lg:text-5xl md:text-4xl sm:text-3xl">{title}</h1>
               </div>
 
               {trailer && (
@@ -94,60 +95,41 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
         </div>
 
         <div className="gird grid-rows-1 p-16 pt-5 h-1/3 text-xl">
-          <div className="flex justify-between align-middle text-center">
-            <div className="breadcrumbs ">
+          <div className="flex justify-between align-middle text-center mb-3">
+            <div className="breadcrumbs font-bold text-center">
               <ul>
                 <li>
-                  <span className="text-2xl"> {year} </span>
+                  <span className="lg:text-3xl md:2xl sm:xl"> {year} </span>
                 </li>
                 <li>
-                  <span className="text-lg"> {runtime} </span>
+                  <span className="lg:text-xl md:lg sm:sm text-success">
+                    {" "}
+                    {runtime}{" "}
+                  </span>
                 </li>
                 <li>
-                  <span className=""> {language} </span>
+                  <span className="lg:text-md md:sm sm:xs text-warning">
+                    {" "}
+                    {language}{" "}
+                  </span>
                 </li>
               </ul>
             </div>
 
             <div className="">
               <ul className="menu menu-horizontal">
-                <li className="text-3xl">
-                  <PressOnceButton
+                <li className="px-1">
+                  <button
+                    className="btn btn-accent btn-outline text-xl rounded-xl"
                     onClick={() => {
                       NotifyDiscord(movie);
-                    }}
-                    icon={<FaDiscord />}
-                  />
-                </li>
-                <li>
-                  <PressOnceButton
-                    onClick={() => {
-                      markAsWatched();
-                    }}
-                    icon={<FaEye />}
-                  />
-                </li>
-                <li>
-                  <PressOnceButton
-                    onClick={() => {
                       window.location.reload();
                     }}
-                    icon={
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20C15.73 20 18.84 17.45 19.73 14H17.65C16.83 16.33 14.61 18 12 18C8.69 18 6 15.31 6 12C6 8.69 8.69 6 12 6C13.66 6 15.14 6.69 16.22 7.78L13 11H20V4L17.65 6.35Z"
-                          fill="#fff"
-                        />
-                      </svg>
-                    }
-                  />
+                  >
+                    <FaDiscord />
+                  </button>
                 </li>
+                
               </ul>
             </div>
           </div>
@@ -159,21 +141,31 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
             </div>
             <div className="grid grid-row-1 mr-10">
               {actors && (
-                <span>
-                  Cast
+                <span className="py-1">
+                  <h1 className="card-title">Cast:</h1>
                   <p>{actors}</p>
                 </span>
               )}
               {genre && (
-                <span>
-                  Genres <p>{genre}</p>
+                <span className="py-1">
+                  <h1 className="card-title">Genres:</h1> <p>{genre}</p>
                 </span>
               )}
 
-              <span>
-                Added by
-                <span className="font-bold"> {submittedby} </span> on{" "}
-                <Moment format="MMMM Do YYYY">{dateAdded}</Moment>
+              <span className="py-1">
+                <h1 className="card-title">Added by:</h1>
+                <div className="flex">
+                  <span className="font-bold text-primary">
+                    <UserChip username={submittedby} />{" "}
+                  </span>{" "}
+                  on{" "}
+                  <Moment
+                    format="MMMM Do YYYY"
+                    className="font-bold text-accent"
+                  >
+                    {dateAdded}
+                  </Moment>
+                </div>
               </span>
             </div>
           </div>

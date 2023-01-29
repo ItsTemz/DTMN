@@ -26,8 +26,8 @@ function ItemDatabaseNavbar() {
   };
 
   return (
-    <div className="navbar bg-base-100 rounded-2xl">
-      <div className="tabs tabs-boxed flex flex-row-reverse">
+    <div className="navbar bg-neutral rounded-2xl">
+      <div className="tabs tabs-boxed flex flex-row-reverse bg-transparent">
         {collectionsArray.map((collection) => {
           return (
             <Tab key={collection._id} TabName={titleCase(collection.name)} />

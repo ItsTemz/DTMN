@@ -101,7 +101,7 @@ function Movie() {
     return (
       movie && (
         <div
-          className="h-[90%] bg-slate-900 image-cover card flex flex-col bg-cover bg-no-repeat bg-center shadow-3xl bg-blur "
+          className="h-[90%] bg-neutral image-cover card flex flex-col bg-cover bg-no-repeat bg-center shadow-3xl bg-blur text-base-100"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.0), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1)) ,url(${backdrop})`,
           }}
@@ -117,10 +117,7 @@ function Movie() {
                 </div>
               )}
 
-              <Link
-                className="btn btn-circle btn-outline absolute right-5 top-5"
-                to="/"
-              >
+              <Link className="btn btn-circle absolute right-5 top-5" to="/">
                 <FaArrowLeft icon="fa-solid fa-arrow-left" />
               </Link>
 
@@ -191,13 +188,19 @@ function Movie() {
               <div className="breadcrumbs font-bold text-center">
                 <ul>
                   <li>
-                    <span className="text-3xl"> {year} </span>
+                    <span className="lg:text-3xl md:2xl sm:xl"> {year} </span>
                   </li>
                   <li>
-                    <span className="text-xl"> {runtime} </span>
+                    <span className="lg:text-xl md:lg sm:sm text-success">
+                      {" "}
+                      {runtime}{" "}
+                    </span>
                   </li>
                   <li>
-                    <span className="text-md"> {language} </span>
+                    <span className="lg:text-md md:sm sm:xs text-warning">
+                      {" "}
+                      {language}{" "}
+                    </span>
                   </li>
                 </ul>
               </div>

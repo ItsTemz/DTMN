@@ -6,10 +6,10 @@ function MovieListItem({ movie, deleteItem, hideItem }) {
   const { title } = movie.movieDetails;
   const { submittedby } = movie.otherDetails;
   return (
-    <div className="w-full flex bg-base-100 p-1">
+    <div className="w-full flex bg-neutral rounded-xl m-[0.15rem]">
       <Link
         type="text"
-        className="input input-bordered w-full btn text-left justify-start "
+        className="input bg-neutral input-bordered w-full btn text-left justify-start "
         readonly
         to={`/movie/${movie._id}`}
       >
@@ -18,15 +18,6 @@ function MovieListItem({ movie, deleteItem, hideItem }) {
       <div className="h-full m-auto px-1">
         <UserChip username={submittedby} />
       </div>
-      {/* <div className="h-12 w-12">
-        <input
-          type="checkbox"
-          className="z-50 checkbox checkbox-lg h-12 w-full p-1"
-          defaultChecked
-          onChange={(e) => hideItem(movie, e.target.checked)}
-        />
-      </div> */}
-
       <button
         className="btn btn-square"
         onClick={() => {

@@ -51,11 +51,11 @@ function SearchedMovieListItem({ movie, addItem }) {
   const { Title, Year, Poster } = movieDetails;
   const { trailer } = moreDetails;
   return (
-    <div className="flex flex-row bg-black">
+    <div className="flex flex-row bg-neutral m-2 rounded-xl text-base-100">
       <div className="text-center">
         <div className="relative">
           {trailer && (
-            <div className="absolute top-0 left-0 right-0 bottom-0 mx-auto my-auto flex items-center justify-center bg-black bg-opacity-70 h-[100%] w-[100%]">
+            <div className="absolute top-0 left-0 right-0 bottom-0 mx-auto my-auto flex items-center justify-center bg-neutral bg-opacity-60 h-[100%] w-[100%]">
               <TrailerModal url={trailer} buttonText={<FaPlay />} />
             </div>
           )}

@@ -15,9 +15,12 @@ function ListNavbar({ numOfItems }) {
   };
 
   return (
-    <div className="navbar bg-base-100 w-full rounded-lg">
+    <div className="navbar bg-neutral w-full rounded-lg">
       <div className="flex-1">
-        <Link className="btn btn-ghost normal-case text-xl" to="/movielibrary">
+        <Link
+          className="btn btn-ghost btn-secondary text-base-100 normal-case text-xl"
+          to="/movielibrary"
+        >
           Library ({numOfItems})
         </Link>
       </div>

@@ -1,7 +1,15 @@
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#fff",
+    },
+  },
+});
 function BasicPagination({ itemsPerPage, totalItems, paginate }) {
   const pageNumbers = [];
 
@@ -14,17 +22,19 @@ function BasicPagination({ itemsPerPage, totalItems, paginate }) {
     paginate(newPage);
   };
   return (
-    <Stack spacing={2}>
-      <Pagination
-        count={pageNumbers.length}
-        variant="outlined"
-        shape="rounded"
-        size="large"
-        onChange={handleChange}
-        color= 'primary'
-        className="w-full flex justify-center bg-base-100 bg-opacity-50 rounded-b-2xl"
-      />
-    </Stack>
+    <ThemeProvider theme={theme}>
+      <Stack spacing={2}>
+        <Pagination
+          count={pageNumbers.length}
+          variant="outlined"
+          shape="rounded"
+          size="large"
+          onChange={handleChange}
+          color="primary"
+          className="w-full flex justify-center bg-neutral rounded-b-2xl"
+        />
+      </Stack>
+    </ThemeProvider>
   );
 }
 

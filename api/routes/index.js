@@ -168,6 +168,7 @@ const rateItem = async (content) => {
       }
     );
     updateMovie(content.imdbID);
+    populateUserMovies();
     return true;
   } catch (err) {
     console.log(err);
@@ -298,7 +299,7 @@ const addMovieToUser = async (username, movie) => {
       await user.save();
 
       calculateUserRating(foundUser._id);
-      
+
       return true;
     } catch (err) {
       console.error(err);

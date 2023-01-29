@@ -1,9 +1,9 @@
-import { Box, Modal } from "@mui/material";
-import React from "react";
-import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import { Box, Modal } from "@mui/material";
+import Rating from "@mui/material/Rating";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import UserDetails from "./UserDetails";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -14,21 +14,84 @@ const StyledRating = styled(Rating)(({ theme }) => ({
 
 const style = {
   position: "absolute",
-  top: "50%",
   left: "50%",
-  transform: "translate(-50%, -50%)",
+  transform: "translate(-50%, 0)",
   width: "50%",
-  height: "80%",
+  height: "50%",
   bgcolor: "black",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
 
-function UserCard({user}) {
-
-  
+function UserCard({ user, index }) {
   const [showModal, setShowModal] = useState(false);
+
+  const getBadge = (inIndex) =>{
+    if(inIndex === 0){
+      return (
+        <div className="absolute top-5 right-5 bordered z-10">
+          <svg width="75" height="75" className="z-10">
+            <text
+              x="35"
+              y="35"
+              fill="gold"
+              font-size="52"
+              text-anchor="middle"
+              dominant-baseline="central"
+            >
+              #1
+            </text>
+          </svg>
+        </div>
+      );
+    }
+    else if(inIndex === 1){
+      return (
+        <div className="absolute top-5 right-5 bordered z-10">
+          <svg width="75" height="75" className="z-10">
+            <text
+              x="35"
+              y="35"
+              fill="silver"
+              font-size="52"
+              text-anchor="middle"
+              dominant-baseline="central"
+            >
+              #2
+            </text>
+          </svg>
+        </div>
+      );
+    }
+    else if(inIndex === 2){
+      return (
+        <div className="absolute top-5 right-5 bordered z-10">
+          <svg width="75" height="75" className="z-10">
+            <text
+              x="35"
+              y="35"
+              fill="bronze"
+              font-size="52"
+              text-anchor="middle"
+              dominant-baseline="central"
+            >
+              #3
+            </text>
+          </svg>
+        </div>
+      );
+    }
+    else {
+      return null;
+    }
+  }
+
+  useEffect(() =>{
+
+
+  }, [index])
+  
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -40,10 +103,11 @@ function UserCard({user}) {
 
   return (
     <div
-      className="card bg-base-100 shadow-xl h-full btn"
+      className="card bg-neutral shadow-xl h-full btn"
       onClick={handleModalOpen}
     >
-      <div class="avatar m-auto p-5 pb-1">
+      {getBadge(index)}
+      <div className="avatar m-auto p-5 pb-1">
         <div class="w-32 rounded-full">
           <img src={userImage} alt="userImage" />
         </div>
@@ -84,7 +148,7 @@ function UserCard({user}) {
         aria-describedby="modal-modal-description"
       >
         <div style={style}>
-          <UserDetails user={user}/>
+          <UserDetails user={user} />
         </div>
       </Modal>
     </div>

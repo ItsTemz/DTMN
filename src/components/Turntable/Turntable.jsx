@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PropagateLoader } from "react-spinners";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
+import duckImage from "./Assets/DuckNoData.png";
 import ReactTurntable from "./TurntableComponent";
 import "./TurntableStyles.css";
 
@@ -36,8 +37,8 @@ function Turntable({ movieSelected, movieStorage }) {
   };
   const options = {
     prizes,
-    width: 500,
-    height: 500,
+    width: 620,
+    height: 620,
     wheelColors: ["#0FA3B1", "#B5E2FA", "#F9F7F3", "#EDDEA4", "#1a202c"],
     primaryColor: "gray",
     secondaryColor: "#1a202c",
@@ -78,10 +79,11 @@ function Turntable({ movieSelected, movieStorage }) {
     );
   } else {
     return (
-      <PropagateLoader
-        className="h-full text-center align-middle"
-        color="#fff"
-      />
+      <img
+        className="h-[50%] w-[50%] mx-auto my-auto border rounded-full p-10 border-black bg-black bg-opacity-50"
+        src={duckImage}
+        alt="Alternate text"
+      ></img>
     );
   }
 }

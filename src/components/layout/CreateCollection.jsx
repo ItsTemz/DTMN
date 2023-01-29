@@ -41,7 +41,7 @@ function CreateCollection({
   return (
     <div>
       <button
-        className="btn btn-outline btn-circle normal-case btn-sm"
+        className="btn btn-outline btn-circle normal-case btn-sm btn-accent"
         onClick={handleModalOpen}
       >
         <FaPlus />

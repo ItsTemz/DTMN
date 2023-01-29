@@ -31,18 +31,28 @@ img {
   object-fit: fill;
 }
 body {
-  /* background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); */
-  background-image: linear-gradient(
-      200deg,
-      hsla(187, 100%, 69%, 1),
-      hsla(187, 100%, 69%, 0) 70%
-    ),
-    linear-gradient(130deg, rgb(255, 231, 97), hsla(300, 100%, 69%, 0) 70%),
-    linear-gradient(330deg, hsla(0, 100%, 69%, 1), hsla(0, 100%, 69%, 0) 70%);
-  height: 100vh;
-  width: 100vw;
-  background-position: center;
-  background-size: cover;
+  margin: 0;
+  position: absolute;
+  background: linear-gradient(
+    45deg,
+    #e8b453,
+    #b09ced,
+    #ea766c,
+    #a991f7,
+    #5caccc,
+    #f2bb6e
+  );
+  background-size: 600% 100%;
+  animation: gradient 16s linear infinite;
+  animation-direction: alternate;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
 }
 
 footer {

@@ -45,7 +45,7 @@ function LibraryNavbar({
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-2xl my-1 rounded-lg z-50">
+    <div className="navbar bg-neutral shadow-2xl my-1 rounded-lg z-50 text-base-100">
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl">
           Library ({numberOfMovies})
@@ -71,13 +71,13 @@ function LibraryNavbar({
               Filter
               <FaFilter />
             </a>
-            <ul className="p-2 bg-base-100">
+            <ul className="p-2 bg-neutral bg-opacity-80">
               <li className="menu-title">
                 <span>Users</span>
               </li>
 
               <li tabIndex={0}>
-                <ul className="bg-base-100 menu menu-compact w-56 rounded-box">
+                <ul className="bg-neutral bg-opacity-90 menu menu-compact w-56 rounded-box">
                   {knownUsers.map((user, index) => (
                     <ListItem
                       key={index}
@@ -92,7 +92,7 @@ function LibraryNavbar({
                 <span>Genres</span>
               </li>
               <li>
-                <ul className="bg-base-100 menu menu-compact w-56 rounded-box">
+                <ul className="bg-neutral bg-opacity-90 menu menu-compact w-56 rounded-box">
                   {knownGenres.map((genre, index) => (
                     <ListItem key={index} itemName={genre} />
                   ))}

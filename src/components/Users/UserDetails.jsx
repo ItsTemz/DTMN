@@ -1,10 +1,10 @@
-import React from 'react'
-import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
-import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import Rating from "@mui/material/Rating";
+import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
-import MovieLibraryItem from '../MovieLibrary/MovieLibraryItem';
+import React from "react";
+import MovieLibraryItem from "../MovieLibrary/MovieLibraryItem";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -12,21 +12,22 @@ const StyledRating = styled(Rating)(({ theme }) => ({
   },
 }));
 
-
-function UserDetails({user}) {
+function UserDetails({ user }) {
   const { username, userTitle, userImage, rating, addedMovies } = user;
   return (
-    <div className="card w-[100%] h-[100%] bg-base-100 shadow-xl">
+    <div className="card bg-neutral shadow-xl text-base-100">
       <div class="avatar m-auto p-5 pb-1">
         <div class="w-[100%] rounded-full">
           <img src={userImage} alt="userImage" />
         </div>
       </div>
-      <div className="card-body">
-        <div className="">
-          <div className="flex justify-between">
-            <h2 className="font-bold text-xl card-title">{username}</h2>
-            <div className="h-full flex text-center justify-center">
+      <div className="card-body flex flex-col mx-10">
+        <div className="border rounded-3xl">
+          <div className="flex justify-between p-5">
+            <h2 className="font-bold text-xl card-title text-center">
+              {username}
+            </h2>
+            <div className="flex text-center ">
               <div className="m-auto">
                 <Box>
                   <StyledRating
@@ -51,7 +52,7 @@ function UserDetails({user}) {
           </div>
         </div>
 
-        <div className="stats stats-vertical lg:stats-horizontal shadow">
+        <div className="stats stats-vertical lg:stats-horizontal shadow bg-neutral text-base-100 my-5 p-5 h-full">
           <div className="stat">
             <div className="stat-title">Movies Added</div>
             <div className="stat-value">{addedMovies.length}</div>
@@ -62,17 +63,20 @@ function UserDetails({user}) {
             <div className="stat-value">{userTitle}</div>
           </div>
         </div>
-        <div className="flex justify-end">
-          <div className="h-full w-full bg-base-300">
-            <Carousel cols={4} rows={1} gap={10} loop>
-              {addedMovies.map((movie)=>{
-                return (
-                  <Carousel.Item>
-                    <MovieLibraryItem movie={movie} />
-                  </Carousel.Item>
-                );
-              })}
-            </Carousel>
+
+        <div className="h-full w-full">
+          <div className="border border-base-300 rounded-3xl bg-neutral">
+            <div className="p-8">
+              <Carousel cols={5} rows={2} gap={8} loop>
+                {addedMovies.map((movie) => {
+                  return (
+                    <Carousel.Item>
+                      <MovieLibraryItem movie={movie} />
+                    </Carousel.Item>
+                  );
+                })}
+              </Carousel>
+            </div>
           </div>
         </div>
       </div>
@@ -80,4 +84,4 @@ function UserDetails({user}) {
   );
 }
 
-export default UserDetails
+export default UserDetails;

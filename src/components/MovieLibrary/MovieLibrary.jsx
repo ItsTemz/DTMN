@@ -78,7 +78,7 @@ function Library() {
             movieStorage={movieStorage}
             applyFilter={applyUserFilter}
           />
-          <div className="container flex flex-col w-full bg-base-300 rounded-lg ">
+          <div className="container flex flex-col w-full bg-neutral bg-opacity-90 rounded-lg ">
             {currentMovies.length > 0 ? (
               <MovieLibraryList
                 movieStorage={isSearching ? searchItems : currentMovies}

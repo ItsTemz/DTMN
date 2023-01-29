@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaPlus, FaPlusCircle, FaTheaterMasks } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ManualAdd from "../../pages/ManualAdd";
+import DuckImage from "../layout/assets/favicon-32x32.png";
 
 function Navbar({ title }) {
   return (

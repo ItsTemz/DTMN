@@ -55,7 +55,7 @@ function PickerWheelMenu() {
 
   return (
     <div className="h-[70%]">
-      <div className="h-[60vh] flex flex-row-reverse  p-5 bg-opacity-50 bg-gray-900 rounded-2xl ">
+      <div className="h-[60vh] flex flex-row-reverse p-5 bg-opacity-50 bg-neutral rounded-2xl ">
         {showModal && (
           <MovieDetailsModal
             movie={winnerMovie}
@@ -73,7 +73,7 @@ function PickerWheelMenu() {
           </div>
         )}
         {displayItems && (
-          <div className="flex-1">
+          <div className="flex-1 h-full">
             <Turntable
               movieSelected={onWinnerSelected}
               movieStorage={displayItems}

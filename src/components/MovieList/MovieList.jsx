@@ -9,7 +9,7 @@ function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
   return (
     <div className="h-[100%] w-full">
       <ListNavbar numOfItems={movieStorage.length} />
-      <div className="w-full h-[90%] overflow-y-scroll overflow-x-clip list bg-base-100  rounded-lg my-1 p-1">
+      <div className="w-full h-[90%] overflow-y-scroll overflow-x-clip list bg-neutral bg-opacity-75 rounded-lg my-1 p-1">
         <div className="">
           {!isSearching ? (
             <div className="flex flex-col-reverse">
