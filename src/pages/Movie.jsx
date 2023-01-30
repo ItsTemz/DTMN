@@ -10,6 +10,7 @@ import TrailerModal from "../components/layout/TrailerModal";
 import {
   deleteMovieFromStorage,
   getMovieFromStorage,
+  getUser,
   markMovieAsWatched,
   setMovieRating,
 } from "../context/moviedb/MovieDBActions";
@@ -17,6 +18,7 @@ import MovieDBContext from "../context/moviedb/MovieDBContext";
 
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import RateUserModal from "../components/Users/RateUserModal";
 import UserChip from "../components/Users/UserChip";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -46,6 +48,7 @@ function Movie() {
   const { movie, loading, dispatch } = useContext(MovieDBContext);
   const [hover, setHover] = useState(-1);
   const [ratingValue, setRatingValue] = useState(0);
+  const [userDetails, setUserDetails] = useState({});
 
   const handleRatingChange = (newRating) => {
     setMovieRating({
@@ -66,7 +69,10 @@ function Movie() {
       if (movieData.otherDetails.duckTalkRating) {
         setRatingValue(movieData.otherDetails.duckTalkRating);
       }
+      const userData = await getUser(movieData.otherDetails.submittedby);
+      setUserDetails(userData);
     };
+
     getMovieData();
   }, [dispatch, id]);
 
@@ -125,11 +131,12 @@ function Movie() {
                 <div className="my-5">
                   <h1 className="text-4xl">{title}</h1>
                 </div>
-                <div className="flex flex-row">
+                <div className="flex flex-row justify-between">
                   <div className="flex flex-row">
                     {trailer && (
                       <TrailerModal buttonText={"Play Trailer"} url={trailer} />
                     )}
+
                     {link && (
                       <div className="flex flex-row ">
                         <a
@@ -205,7 +212,8 @@ function Movie() {
                 </ul>
               </div>
 
-              <div className="">
+              <div className="flex">
+                {submittedby && <RateUserModal user={userDetails} />}
                 <ul className="menu menu-horizontal">
                   <li className="px-1">
                     <button
@@ -256,7 +264,7 @@ function Movie() {
                   <h1 className="card-title">Added by:</h1>
                   <div className="flex">
                     <span className="font-bold text-primary">
-                      <UserChip username={submittedby} />{" "}
+                      <UserChip givenUsername={submittedby} />{" "}
                     </span>{" "}
                     on{" "}
                     <Moment

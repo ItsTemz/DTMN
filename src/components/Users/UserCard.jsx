@@ -2,8 +2,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { Box, Modal } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import UserDetails from "./UserDetails";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -99,7 +98,7 @@ function UserCard({ user, index }) {
     setShowModal(true);
   };
 
-  const { username, rating, userImage } = user;
+  const { username, rating, userImage, avgUserScore } = user;
 
   return (
     <div
@@ -121,7 +120,7 @@ function UserCard({ user, index }) {
                 <StyledRating
                   readOnly
                   name="hover-feedback"
-                  value={rating}
+                  value={avgUserScore}
                   size="large"
                   precision={0.5}
                   emptyIcon={
@@ -135,7 +134,7 @@ function UserCard({ user, index }) {
             </div>
             <div className="py-1">
               <div className="badge badge-accent badge-outline badge-lg">
-                {rating.toFixed(1)}
+                {avgUserScore.toFixed(1)}
               </div>
             </div>
           </div>

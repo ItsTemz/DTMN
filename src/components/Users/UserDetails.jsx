@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import React from "react";
 import MovieLibraryItem from "../MovieLibrary/MovieLibraryItem";
+import RateUserModal from "./RateUserModal";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -13,7 +14,7 @@ const StyledRating = styled(Rating)(({ theme }) => ({
 }));
 
 function UserDetails({ user }) {
-  const { username, userTitle, userImage, rating, addedMovies } = user;
+  const { username, userTitle, userImage, rating, addedMovies ,avgUserScore} = user;
   return (
     <div className="card bg-neutral shadow-xl text-base-100">
       <div class="avatar m-auto p-5 pb-1">
@@ -27,13 +28,17 @@ function UserDetails({ user }) {
             <h2 className="font-bold text-xl card-title text-center">
               {username}
             </h2>
+
             <div className="flex text-center ">
+              <h1 className="card-title m-auto flex justify-center p-2">
+                User Score:{" "}
+              </h1>
               <div className="m-auto">
                 <Box>
                   <StyledRating
                     readOnly
                     name="hover-feedback"
-                    value={rating}
+                    value={avgUserScore}
                     size="large"
                     precision={0.5}
                     emptyIcon={
@@ -45,9 +50,10 @@ function UserDetails({ user }) {
                   />
                 </Box>
               </div>
-              <div className="badge badge-accent badge-outline badge-lg m-auto ml-2 p-3">
-                {rating.toFixed(1)}
+              <div className="badge badge-secondary badge-outline badge-lg m-auto ml-2 p-3">
+                {avgUserScore.toFixed(1)}
               </div>
+              <RateUserModal user={user} />
             </div>
           </div>
         </div>
@@ -59,8 +65,31 @@ function UserDetails({ user }) {
           </div>
 
           <div className="stat">
-            <div className="stat-title">Title</div>
-            <div className="stat-value">{userTitle}</div>
+            <div className="stat-title">Movie Score</div>
+            <div className="stat-value">
+              <div className="flex text-center ">
+                <div className="">
+                  <Box>
+                    <StyledRating
+                      readOnly
+                      name="hover-feedback"
+                      value={rating}
+                      size="large"
+                      precision={0.5}
+                      emptyIcon={
+                        <StarIcon
+                          style={{ opacity: 0.55, color: "grey" }}
+                          fontSize="inherit"
+                        />
+                      }
+                    />
+                  </Box>
+                </div>
+                <div className="badge badge-accent badge-outline badge-lg m-auto ml-2 p-3">
+                  {rating.toFixed(1)}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

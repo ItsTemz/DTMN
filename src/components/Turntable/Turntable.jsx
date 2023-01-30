@@ -79,11 +79,18 @@ function Turntable({ movieSelected, movieStorage }) {
     );
   } else {
     return (
-      <img
-        className="h-[50%] w-[50%] mx-auto my-auto border rounded-full p-10 border-black bg-black bg-opacity-50"
-        src={duckImage}
-        alt="Alternate text"
-      ></img>
+      <div className="h-full w-full flex">
+        <div className="mx-auto my-auto h-[50%] w-[50%]">
+          <img
+            className="  border rounded-full p-10 border-black bg-black bg-opacity-50 "
+            src={duckImage}
+            alt="Alternate text"
+          ></img>
+          <h1 className="text-3xl text-center text-warning p-5">
+            Please add at least two entries.
+          </h1>
+        </div>
+      </div>
     );
   }
 }

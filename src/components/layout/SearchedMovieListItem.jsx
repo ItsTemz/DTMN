@@ -11,6 +11,7 @@ import TrailerModal from "./TrailerModal";
 function SearchedMovieListItem({ movie, addItem }) {
   const [movieDetails, SetMovieDetails] = useState({});
   const [moreDetails, SetMoreDetails] = useState({});
+  const [text, setText] = useState("");
 
   const fetchMovieDetails = async () => {
     const data = await getDetailedMovie(movie);
@@ -18,10 +19,12 @@ function SearchedMovieListItem({ movie, addItem }) {
   };
 
   const onAddClicked = async () => {
-    await addMovieToStorage(movieDetails).then((response) => {
+    await addMovieToStorage(movieDetails, text).then((response) => {
       addItem(response);
     });
   };
+
+  const handleChange = (e) => setText(e.target.value);
 
   useEffect(() => {
     fetchMovieDetails();
@@ -41,12 +44,9 @@ function SearchedMovieListItem({ movie, addItem }) {
         SetMoreDetails(response.data);
       });
     };
+
     fetchData();
   }, []);
-
-  useEffect(() => {
-    
-  }, [moreDetails])
 
   const { Title, Year, Poster } = movieDetails;
   const { trailer } = moreDetails;
@@ -70,11 +70,18 @@ function SearchedMovieListItem({ movie, addItem }) {
         </div>
 
         <div className="">
+          <input
+            type="text"
+            placeholder="Contributer Username"
+            className="input input-bordered text-black bg-base-200"
+            value={text}
+            onChange={handleChange}
+          />
           <button
-            className="btn btn-outline btn-primary"
+            className={`btn btn-outline btn-primary ${text.length <= 3 ? 'btn-disabled opacity-50 btn-error' : ''}`}
             onClick={onAddClicked}
           >
-            Add
+            add
           </button>
         </div>
       </div>

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import { getMoviesFromStorage } from "../../context/moviedb/MovieDBActions";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
-import ItemDatabaseNavbar from "../layout/PickerWheelMenuNavbar";
 import BasicPagination from "../Pagination";
 import MovieLibraryList from "./MovieLibraryList";
 import LibraryNavbar from "./MovieLibraryNavbar";
@@ -66,39 +65,31 @@ function Library() {
   };
 
   if (!loading) {
-    if (movieStorage.length > 0) {
-      return (
-        <div className="grid grid-cols-1 justify-center">
-          <div>
-            <ItemDatabaseNavbar />
-          </div>
-          <LibraryNavbar
-            numberOfMovies={movieStorage.length}
-            searchMovie={searchItem}
-            movieStorage={movieStorage}
-            applyFilter={applyUserFilter}
-          />
-          <div className="container flex flex-col w-full bg-neutral bg-opacity-90 rounded-lg ">
-            {currentMovies.length > 0 ? (
-              <MovieLibraryList
-                movieStorage={isSearching ? searchItems : currentMovies}
-              />
-            ) : (
-              <div className="w-full justify-center h-full">
-                Nothing to show
-              </div>
-            )}
-          </div>
-          <BasicPagination
-            itemsPerPage={itemsPerPage}
-            totalItems={movieStorage.length}
-            paginate={paginate}
-          />
+    return (
+      <div className="grid grid-cols-1 justify-center">
+        
+        <LibraryNavbar
+          numberOfMovies={movieStorage.length}
+          searchMovie={searchItem}
+          movieStorage={movieStorage}
+          applyFilter={applyUserFilter}
+        />
+        <div className="container flex flex-col w-full bg-neutral bg-opacity-90 rounded-lg ">
+          {currentMovies.length > 0 ? (
+            <MovieLibraryList
+              movieStorage={isSearching ? searchItems : currentMovies}
+            />
+          ) : (
+            <div className="w-full justify-center h-full">Nothing to show</div>
+          )}
         </div>
-      );
-    } else {
-      return <div></div>;
-    }
+        <BasicPagination
+          itemsPerPage={itemsPerPage}
+          totalItems={movieStorage.length}
+          paginate={paginate}
+        />
+      </div>
+    );
   } else {
     return <PropagateLoader className="text-center mx-auto" color="#6d3a9c" />;
   }

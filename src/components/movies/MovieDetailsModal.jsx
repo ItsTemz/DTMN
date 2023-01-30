@@ -156,7 +156,7 @@ function MovieDetailsModal({ movie, handleModalClose, markAsWatched }) {
                 <h1 className="card-title">Added by:</h1>
                 <div className="flex">
                   <span className="font-bold text-primary">
-                    <UserChip username={submittedby} />{" "}
+                    <UserChip givenUsername={submittedby} />{" "}
                   </span>{" "}
                   on{" "}
                   <Moment

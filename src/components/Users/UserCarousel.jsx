@@ -10,7 +10,7 @@ function UserCarousel() {
     <div className="p-4 space-x-4 bg-neutral bg-opacity-50 rounded-box w-full my-5">
       <Carousel cols={5} rows={1} gap={10} showDots>
         {users
-          .sort((a, b) => b.rating - a.rating)
+          .sort((a, b) => b.avgUserScore - a.avgUserScore)
           .map((user, index) => {
             return (
               <Carousel.Item key={user._id}>

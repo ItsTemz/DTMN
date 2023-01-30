@@ -88,6 +88,22 @@ router.get("/users", async function (req, res) {
   res.send(users);
 });
 
+router.get("/user", async function (req, res) {
+  const username = req.query.username;
+  const user = await getUser(username);
+  if (user) {
+    console.log(user);
+    res.send(user);
+  }
+});
+
+router.post("/rateuser", async function (req, res) {
+  const user = req.body.user;
+  const rating = req.body.rating;
+
+  setUserScore(user.username, rating);
+});
+
 router.post("/createCollection", async function (req, res) {
   const collectionName = req.body.collectionName;
   setActiveCollection(collectionName);
@@ -247,8 +263,8 @@ const getUsers = async () => {
   return userlist;
 };
 
-const getUser = async (_id) => {
-  await User.findOne({ _id: _id }).then((user) => {
+const getUser = async (username) => {
+  return await User.findOne({ username: username }).then((user) => {
     return user;
   });
 };
@@ -260,6 +276,8 @@ const addUser = async (username) => {
     rating: 0,
     userTitle: "",
     userImage: "https://placeimg.com/192/192/people",
+    userScores: [],
+    avgUserScore: 0,
   };
 
   if (username !== "") {
@@ -272,6 +290,20 @@ const addUser = async (username) => {
       return true;
     } catch (error) {
       console.log(error);
+    }
+  }
+};
+
+const setUserScore = async (username, score) => {
+  if (username !== "" || username !== undefined) {
+    try {
+      await User.findOneAndUpdate({username: username}, {
+        $addToSet: { userScores: score },
+      }).then((user) => {
+        calculateUserScore(user._id);
+      });
+    } catch (err) {
+      console.log(err);
     }
   }
 };
@@ -298,17 +330,16 @@ const addMovieToUser = async (username, movie) => {
       }
       await user.save();
 
-      calculateUserRating(foundUser._id);
-
+      calculateUserMovieRating(foundUser._id);
+      calculateUserScore(foundUser._id);
       return true;
     } catch (err) {
       console.error(err);
     }
   });
-
 };
 
-const calculateUserRating = async (userId) => {
+const calculateUserMovieRating = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new Error("User not found");
@@ -324,6 +355,18 @@ const calculateUserRating = async (userId) => {
   const averageRating = totalRating / ratings.length;
   await User.findByIdAndUpdate(userId, { rating: averageRating });
   return averageRating;
+};
+
+const calculateUserScore = async (userId) => {
+  const user = await User.findById(userId);
+  const userScores = user.userScores;
+
+  if (userScores.length === 0) return 0;
+
+  const totalScore = userScores.reduce((a, b) => a + b, 0);
+  const averageScore = totalScore / userScores.length;
+  await User.findByIdAndUpdate(userId, { avgUserScore: averageScore });
+  return averageScore;
 };
 
 const populateUserMovies = async () => {
@@ -439,4 +482,3 @@ module.exports = router;
 const clearDB = async () => {
   await ActiveCollection.deleteMany({});
 };
-

@@ -5,7 +5,7 @@ import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import UserChip from "../Users/UserChip";
 
 function MovieLibraryItem({ movie }) {
-  const { loading} = useContext(MovieDBContext);
+  const { loading } = useContext(MovieDBContext);
   const [movieDetails, SetMovieDetails] = useState({});
   const [contributorDetails, SetContributorDetails] = useState({});
 
@@ -14,19 +14,25 @@ function MovieLibraryItem({ movie }) {
     SetContributorDetails(movie.otherDetails);
   }, []);
 
-
   if (!loading) {
-    if (movieDetails && contributorDetails){
-      const { poster, description, imdbID, title, backdrop} = movieDetails;
+    if (movieDetails && contributorDetails) {
+      const { poster, description, imdbID, title, backdrop } = movieDetails;
 
       const { submittedby } = contributorDetails;
       return (
         <div className="card bg-base-100 shadow-xl image-full w-full">
           <span className="absolute z-10 right-4 top-5 text-lg h-10 font-bold">
-              <UserChip username={submittedby}/>
+            <UserChip givenUsername={submittedby} />
           </span>
           <figure className="">
-            <img src={poster || backdrop} alt="backdrop" />
+            <img
+              src={
+                poster ||
+                backdrop ||
+                "https://www.inquirer.com/resizer/PqlH8AlOFb7xyw6NJd02NjfPYso=/700x467/smart/filters:format(webp)/arc-anglerfish-arc2-prod-pmn.s3.amazonaws.com/public/RO53ME5BHVDCRFXPAA3OYLOCGA.jpg"
+              }
+              alt="backdrop"
+            />
           </figure>
           <div className="card-body flex justify-end">
             <h2 className="card-title">{title}</h2>
@@ -56,8 +62,8 @@ function MovieLibraryItem({ movie }) {
           </div>
         </div>
       );
-    }else{
-      return <div></div>
+    } else {
+      return <div></div>;
     }
   } else {
     return <PropagateLoader className="text-center mx-auto" color="#6d3a9c" />;

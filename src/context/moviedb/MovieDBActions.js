@@ -42,7 +42,7 @@ export const markMovieAsWatched = async (movie) => {
   });
 };
 
-export const getCollections = async () =>{
+export const getCollections = async () => {
   const collections = axios.create({
     baseURL: `${DTMN_API_URL}/collections`,
   });
@@ -99,7 +99,8 @@ export const getDetailedMovie = async (movie) => {
   return response.data;
 };
 
-export const addMovieToStorage = async (movie) => {
+export const addMovieToStorage = async (movie, submitter) => {
+
   const data = {
     title: movie.Title,
     year: movie.Year,
@@ -114,14 +115,17 @@ export const addMovieToStorage = async (movie) => {
     imdbid: movie.imdbID,
     trailer: null,
     backdrop: movie.Poster,
-    submittedby: "Admin",
+    submittedby: submitter || "Admin",
   };
+
   return await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
+    
     if (response.data.movieDetails.title !== data.title) {
       alert("Successfully Added to the database");
     } else {
       alert("Movie already exists");
     }
+
     return response.data;
   });
 };
@@ -146,8 +150,8 @@ export const getMoviesFromStorage = async (collectionName) => {
   const movies = axios.create({
     baseURL: `${DTMN_API_URL}/movies`,
     params: {
-      collectionName: collectionName || 'Movie',
-    }
+      collectionName: collectionName || "Movie",
+    },
   });
 
   const response = await movies.get();
@@ -166,19 +170,32 @@ export const getUsers = async () => {
 export const getUser = async (username) => {
   const user = axios.create({
     baseURL: `${DTMN_API_URL}/user`,
-    params:{
-      username: username
-    }
+    params: {
+      username: username,
+    },
   });
 
-  const response = await user.get();
-  return response.data;
+  return await user.get().then((response) => {
+    return response.data;
+  });
 };
 
-export const createCollection = async (collectionName) => {
-
+export const rateUser = async (userData, rating) => {
   return await axios
-    .post(`${DTMN_API_URL}/createCollection`, {collectionName: collectionName})
+    .post(`${DTMN_API_URL}/rateuser`, {
+      user: userData,
+      rating: rating,
+    })
+    .then((response) => {
+      return response.data;
+    });
+}
+
+export const createCollection = async (collectionName) => {
+  return await axios
+    .post(`${DTMN_API_URL}/createCollection`, {
+      collectionName: collectionName,
+    })
     .then((response) => {
       if (response.data === true) {
         alert("Created New Collection");
@@ -198,6 +215,7 @@ export const getMovieFromStorage = async (id) => {
   });
 
   return await movie.get().then((response) => {
+    
     return response.data;
   });
 };
@@ -212,4 +230,3 @@ export const deleteMovieFromStorage = async (id) => {
     return response.data;
   });
 };
-

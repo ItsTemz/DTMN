@@ -16,7 +16,7 @@ function MovieListItem({ movie, deleteItem, hideItem }) {
         {title || "Unknown"}
       </Link>
       <div className="h-full m-auto px-1">
-        <UserChip username={submittedby} />
+        <UserChip givenUsername={submittedby} />
       </div>
       <button
         className="btn btn-square"
