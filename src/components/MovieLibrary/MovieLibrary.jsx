@@ -5,6 +5,9 @@ import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import BasicPagination from "../Pagination";
 import MovieLibraryList from "./MovieLibraryList";
 import LibraryNavbar from "./MovieLibraryNavbar";
+import ItemDatabaseNavbar from "../../components/layout/PickerWheelMenuNavbar";
+
+
 
 function Library() {
   const { loading, movieStorage,activeCollection, dispatch } = useContext(MovieDBContext);
@@ -67,7 +70,7 @@ function Library() {
   if (!loading) {
     return (
       <div className="grid grid-cols-1 justify-center">
-        
+        <ItemDatabaseNavbar />
         <LibraryNavbar
           numberOfMovies={movieStorage.length}
           searchMovie={searchItem}

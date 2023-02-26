@@ -30,6 +30,24 @@ export const setMovieRating = async (content) => {
   });
 };
 
+export const loginUser = async (passphrase) => {
+  const data = { passphrase: passphrase };
+
+  await axios.post(`${DTMN_API_URL}/login`, data).then((response) => {
+    console.log(response.data);
+    if (response.data) {
+      return response.data;
+    }
+  });
+};
+
+export const getAuthentication = async () => {
+  return await axios.get(`${DTMN_API_URL}/isAuthenticated`).then((response) => {
+    console.log(response.data);
+    return response.data;
+  })
+}
+
 export const markMovieAsWatched = async (movie) => {
   const data = { dbid: movie.dbid };
   await axios.put(`${DTMN_API_URL}/movie`, data).then((response) => {
@@ -100,7 +118,6 @@ export const getDetailedMovie = async (movie) => {
 };
 
 export const addMovieToStorage = async (movie, submitter) => {
-
   const data = {
     title: movie.Title,
     year: movie.Year,
@@ -119,7 +136,6 @@ export const addMovieToStorage = async (movie, submitter) => {
   };
 
   return await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
-    
     if (response.data.movieDetails.title !== data.title) {
       alert("Successfully Added to the database");
     } else {
@@ -189,7 +205,7 @@ export const rateUser = async (userData, rating) => {
     .then((response) => {
       return response.data;
     });
-}
+};
 
 export const createCollection = async (collectionName) => {
   return await axios
@@ -215,7 +231,6 @@ export const getMovieFromStorage = async (id) => {
   });
 
   return await movie.get().then((response) => {
-    
     return response.data;
   });
 };

@@ -23,6 +23,7 @@ function MovieListItem({ movie, deleteItem, hideItem }) {
         onClick={() => {
           deleteMovieFromStorage(movie._id);
           deleteItem(movie._id);
+          window.location.reload();
         }}
       >
         <svg

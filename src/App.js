@@ -7,6 +7,7 @@ import { AlertProvider } from "./context/alert/AlertContext";
 import { MovieDBProvider } from "./context/moviedb/MovieDBContext";
 import About from "./pages/About";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import ManualAdd from "./pages/ManualAdd";
 import Movie from "./pages/Movie";
 import LibraryPage from "./pages/MovieLibraryPage";
@@ -20,10 +21,11 @@ function App() {
         <Router>
           <div className=" flex flex-col h-screen w-screen justify-between">
             <Navbar />
-            <main className="container mx-auto px-3 pb-12 h-screen w-screen">
+            <main className="container mx-auto px-3 pb-12 h-full w-screen">
               <Alert />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/movielibrary" element={<LibraryPage />} />
                 <Route path="/search" element={<Search />} />
@@ -36,7 +38,6 @@ function App() {
             </main>
           </div>
         </Router>
-        {/* <Footer /> */}
       </AlertProvider>
     </MovieDBProvider>
   );

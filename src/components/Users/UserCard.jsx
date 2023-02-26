@@ -2,7 +2,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { Box, Modal } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { styled } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UserDetails from "./UserDetails";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -14,20 +14,19 @@ const StyledRating = styled(Rating)(({ theme }) => ({
 const style = {
   position: "absolute",
   left: "50%",
-  transform: "translate(-50%, 0)",
+  top: "50%",
+  transform: "translate(-50%, -90%)",
   width: "50%",
   height: "50%",
   bgcolor: "black",
-  border: "2px solid #000",
-  boxShadow: 24,
   p: 4,
 };
 
 function UserCard({ user, index }) {
   const [showModal, setShowModal] = useState(false);
 
-  const getBadge = (inIndex) =>{
-    if(inIndex === 0){
+  const getBadge = (inIndex) => {
+    if (inIndex === 0) {
       return (
         <div className="absolute top-5 right-5 bordered z-10">
           <svg width="75" height="75" className="z-10">
@@ -44,8 +43,7 @@ function UserCard({ user, index }) {
           </svg>
         </div>
       );
-    }
-    else if(inIndex === 1){
+    } else if (inIndex === 1) {
       return (
         <div className="absolute top-5 right-5 bordered z-10">
           <svg width="75" height="75" className="z-10">
@@ -62,8 +60,7 @@ function UserCard({ user, index }) {
           </svg>
         </div>
       );
-    }
-    else if(inIndex === 2){
+    } else if (inIndex === 2) {
       return (
         <div className="absolute top-5 right-5 bordered z-10">
           <svg width="75" height="75" className="z-10">
@@ -80,17 +77,13 @@ function UserCard({ user, index }) {
           </svg>
         </div>
       );
-    }
-    else {
+    } else {
       return null;
     }
-  }
+  };
 
-  useEffect(() =>{
+  useEffect(() => {}, [index]);
 
-
-  }, [index])
-  
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -98,7 +91,7 @@ function UserCard({ user, index }) {
     setShowModal(true);
   };
 
-  const { username, rating, userImage, avgUserScore } = user;
+  const { username, rating, userImage, avgUserScore, addedMovies } = user;
 
   return (
     <div
@@ -115,7 +108,7 @@ function UserCard({ user, index }) {
         <h2 className="card-title text-white">{username}</h2>
         <div className="card-actions">
           <div>
-            <div>
+            <div className="flex">
               <Box>
                 <StyledRating
                   readOnly
@@ -131,10 +124,16 @@ function UserCard({ user, index }) {
                   }
                 />
               </Box>
+              <div className="py-1">
+                <div className="badge badge-accent badge-outline badge-lg">
+                  {avgUserScore.toFixed(1)}
+                </div>
+              </div>
             </div>
+
             <div className="py-1">
-              <div className="badge badge-accent badge-outline badge-lg">
-                {avgUserScore.toFixed(1)}
+              <div className="badge badge-secondary badge-outline badge-lg">
+                {addedMovies.length} Items
               </div>
             </div>
           </div>

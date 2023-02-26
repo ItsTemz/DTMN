@@ -6,12 +6,31 @@ const userSchema = require("../Database/models/UserModel");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+// const session = require("express-session");
+// const passport = require("passport");
+// const passportLocalMongoose = require("passport-local-mongoose");
+
+const app = express();
+
+// const secret = process.env.SECRETS;
+// app.use(
+//   session({
+//     secret: secret,
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
+// app.use(passport.initialize());
+// app.use(passport.session());
+
 const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
+const MONGODB_USER = process.env.MONGODB_USER;
+
 //Connect to Database
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://itsTemz:${MONGODB_PASSWORD}@cluster0.gcspn.mongodb.net/dtmn?retryWrites=true&w=majority`,
+      `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.gcspn.mongodb.net/dtmn?retryWrites=true&w=majority`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -26,16 +45,85 @@ const connectDB = async () => {
 };
 connectDB();
 
+
 let ActiveCollection = mongoose.model("Movie", movieSchema);
 const User = mongoose.model("User", userSchema);
+
+// const authenticatorSchema = new mongoose.Schema({
+//   username: String,
+//   password: String,
+// });
+
+// authenticatorSchema.plugin(passportLocalMongoose);
+
+// const Authenticator = mongoose.model("Authenticator", authenticatorSchema);
+// passport.use(Authenticator.createStrategy());
+// passport.serializeUser(Authenticator.serializeUser());
+// passport.deserializeUser(Authenticator.deserializeUser());
 
 const setActiveCollection = (collectionName) => {
   ActiveCollection = mongoose.model(collectionName, movieSchema);
 };
 
+
+// const registerAdmin = () => {
+//   Authenticator.register(
+//     { username: "admin" },
+//     process.env.PASSPHRASE,
+//     function (err, user) {
+//       if (err) {
+//         console.log(err);
+//         return false;
+//       } else {
+//         passport.authenticate("local")(function () {
+//           return true;
+//         });
+//       }
+//     }
+//   );
+// };
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
+  // registerAdmin();
   res.render("index", { title: "Duck Talk Movie API" });
+});
+
+// router.get("/register", (req, res) => {
+//   Authenticator.register(
+//     { username: "admin" },
+//     process.env.PASSPHRASE,
+//     function (err, user) {
+//       if (err) {
+//         console.log(err);
+//         res.send(false);
+//       } else {
+//         passport.authenticate("local")(req, res, function () {
+//           res.send(true);
+//         });
+//       }
+//     }
+//   );
+// });
+
+let bIsAuthenticated = false;
+router.post("/login", (req, res) => {
+  console.log(req.body);
+
+  if(req.body.passphrase === process.env.PASSPHRASE)
+  {
+    bIsAuthenticated = true;
+    res.send(bIsAuthenticated);
+    // setTimeout(() => {
+    //   bIsAuthenticated = false;
+    // }, 600000);
+  }
+
+});
+
+router.get("/isAuthenticated", function (req, res) {
+  console.log(bIsAuthenticated);
+  res.send(bIsAuthenticated);
 });
 
 router.get("/movie", async function (req, res) {
@@ -92,7 +180,6 @@ router.get("/user", async function (req, res) {
   const username = req.query.username;
   const user = await getUser(username);
   if (user) {
-    console.log(user);
     res.send(user);
   }
 });
@@ -111,7 +198,6 @@ router.post("/createCollection", async function (req, res) {
 
 router.post("/entry", async function (req, res) {
   const content = req.body;
-  console.log(content);
   const handledEntry = await handleAddingMovie(content);
   if (handledEntry === true) {
     res.send(true);
@@ -192,7 +278,6 @@ const rateItem = async (content) => {
 };
 
 const deleteMovie = async (id) => {
-  console.log(id);
   try {
     await ActiveCollection.findOneAndDelete({ _id: id });
     return true;
@@ -206,7 +291,7 @@ const handleAddingMovie = async (content) => {
   const date = new Date().toString();
   const movieContent = {
     movieDetails: {
-      title: content.title,
+      title: content.title.toLowerCase(),
     },
     otherDetails: {
       submittedby: content.submittedby || content.user,
@@ -219,14 +304,15 @@ const handleAddingMovie = async (content) => {
     try {
       const movie = await completeMovieData(imdbID, movieContent.otherDetails);
       // check if the movie exists on the database or not
-      const foundMovie = await getMovie(imdbID);
-      if (!foundMovie) {
-        await addMovie(movie);
-        await addMovieToUser(movie.otherDetails.submittedby, movie);
-        return movie;
-      } else {
-        return foundMovie;
-      }
+      return await getMovie(imdbID).then(async (foundMovie) => {
+        if (!foundMovie) {
+          await addMovie(movie);
+          await addMovieToUser(movie.otherDetails.submittedby, movie);
+          return true;
+        } else {
+          return foundMovie;
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -234,13 +320,15 @@ const handleAddingMovie = async (content) => {
     try {
       const entry = movieContent;
       // check if the movie exists on the database or not
-      const foundEntry = await getEntry(entry);
-      if (!foundEntry) {
-        await addMovie(entry);
-        return entry;
-      } else {
-        return foundEntry;
-      }
+      return await getEntry(entry).then(async (foundEntry) => {
+        if (!foundEntry) {
+          await addMovie(entry);
+          await addMovieToUser(entry.otherDetails.submittedby, entry);
+          return true;
+        } else {
+          return foundEntry;
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -249,10 +337,9 @@ const handleAddingMovie = async (content) => {
 
 const getEntry = async (entry) => {
   try {
-    const foundMovie = await ActiveCollection.findOne({
-      "movieDetails.title": entry.title,
+    return await ActiveCollection.findOne({
+      "movieDetails.title": entry.movieDetails.title,
     });
-    return foundMovie;
   } catch (error) {
     console.log(error);
   }
@@ -275,7 +362,7 @@ const addUser = async (username) => {
     addedMovies: [],
     rating: 0,
     userTitle: "",
-    userImage: "https://placeimg.com/192/192/people",
+    userImage: "https://i.pravatar.cc/192",
     userScores: [],
     avgUserScore: 0,
   };
@@ -297,9 +384,12 @@ const addUser = async (username) => {
 const setUserScore = async (username, score) => {
   if (username !== "" || username !== undefined) {
     try {
-      await User.findOneAndUpdate({username: username}, {
-        $addToSet: { userScores: score },
-      }).then((user) => {
+      await User.findOneAndUpdate(
+        { username: username },
+        {
+          $addToSet: { userScores: score },
+        }
+      ).then((user) => {
         calculateUserScore(user._id);
       });
     } catch (err) {
@@ -312,23 +402,29 @@ const addMovieToUser = async (username, movie) => {
   await User.findOne({ username: username }).then(async (foundUser) => {
     if (!foundUser) {
       await addUser(username);
+      await addMovieToUser(username, movie);
+      return;
     }
     try {
       // Check if the movie already exists in the user's addedMovies array
-      const user = await User.findOne({ username: username });
-      const index = user.addedMovies.findIndex(
-        (addedMovie) => addedMovie.dbid === movie.dbid
+      const index = foundUser.addedMovies.findIndex(
+        (addedMovie) =>
+          addedMovie.dbid === movie.dbid ||
+          addedMovie.movieDetails.title === movie.movieDetails.title
       );
+
       if (index !== -1) {
         //update the movie in the user's addedMovies array
-        user.addedMovies[index] = movie;
+        foundUser.addedMovies[index] = movie;
         console.log("Movie updated in user addedMovies array");
       } else {
         // Add the movie to the user's addedMovies array
-        user.addedMovies.push(movie);
+        foundUser.addedMovies.push(movie);
         console.log("Movie added to user addedMovies array");
       }
-      await user.save();
+
+      console.log("found movie: " + foundUser.addedMovies[index]);
+      await foundUser.save();
 
       calculateUserMovieRating(foundUser._id);
       calculateUserScore(foundUser._id);
@@ -470,6 +566,7 @@ const completeMovieData = async (id, otherDetails) => {
         watched: false,
       },
     };
+
     return movie;
   } catch (error) {
     console.log(error);

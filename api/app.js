@@ -22,7 +22,7 @@ const io = new Server(server, {
   },
 });
  
-io.on("connection", (socket) => {
+io.on("connection", (socket) => { 
   console.log("New Socket Connection Established ", socket.id);
 
   socket.on("notify_next_watch", (data) => {
@@ -67,7 +67,9 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
+
 module.exports = app;
+
 
 server.listen(port, () => {
   console.log("listening on port ", port);

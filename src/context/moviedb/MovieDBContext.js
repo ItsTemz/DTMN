@@ -15,6 +15,7 @@ export const MovieDBProvider = ({children}) => {
       collectionsArray: [],
       activeCollection: localStorage.getItem("active_collection") || 'Movie',
       users: [],
+      isAuthenticated: false
     };
     const [state, dispatch] = useReducer(MovieDBReducer, initialState);
 

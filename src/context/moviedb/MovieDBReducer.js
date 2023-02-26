@@ -71,6 +71,11 @@ const MovieDBReducer = (state, action) => {
         ...state,
         users: action.payload,
       };
+    case "AUTHENTICATE_USER":
+      return {
+        ...state,
+        isAuthenticated: action.payload,
+      };
     case "DELETE_COLLECTION":
       return {
         ...state,

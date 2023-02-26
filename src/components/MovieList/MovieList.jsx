@@ -22,7 +22,7 @@ function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
                 />
               ))}
             </div>
-          ) : (
+          ) : movies ? (
             <div>
               {movies.map((movie) => {
                 if (movie.Title)
@@ -36,6 +36,8 @@ function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
                 return 0;
               })}
             </div>
+          ) : (
+            <h1>No Results</h1>
           )}
         </div>
       </div>

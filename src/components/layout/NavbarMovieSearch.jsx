@@ -31,19 +31,19 @@ function NavbarMovieSearch() {
             value={text}
             onChange={handleChange}
           />
-          {movies.length > 0 ? (
+          {movies && movies.length > 0 ? (
             <button
               onClick={() => {
                 dispatch({ type: "CLEAR_MOVIES" });
                 setText("");
               }}
-              className="btn m-1 btn-outline btn-error"
+              className={`btn m-1 btn-outline btn-error`}
             >
               Clear
             </button>
           ) : (
             <button
-              className="btn m-1 btn-outline btn-primary"
+              className={`btn m-1 btn-outline btn-primary`}
               type="submit"
               onClick={handleSubmit}
             >
