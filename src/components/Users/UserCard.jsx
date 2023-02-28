@@ -91,7 +91,7 @@ function UserCard({ user, index }) {
     setShowModal(true);
   };
 
-  const { username, rating, userImage, avgUserScore, addedMovies } = user;
+  const { username, userImage, avgUserScore, addedMovies } = user;
 
   return (
     <div

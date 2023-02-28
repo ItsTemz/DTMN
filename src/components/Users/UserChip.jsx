@@ -12,6 +12,14 @@ const theme = createTheme({
   },
 });
 
+function capitalizeFirstLetter(str) {
+  if (!str) {
+    return str;
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function UserChip({givenUsername}) {
   const [userDetails, setUserDetails] = useState({});
 
@@ -30,7 +38,7 @@ function UserChip({givenUsername}) {
       <Stack direction="row" spacing={1}>
         <Chip
           avatar={<Avatar alt="userImage" src={userImage} />}
-          label={`${username}`}
+          label={`${capitalizeFirstLetter(username)}`}
           variant="outlined"
           color="primary"
         />

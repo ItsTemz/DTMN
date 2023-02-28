@@ -1,5 +1,6 @@
 import axios from "axios";
 import { io } from "socket.io-client";
+import { Store } from "react-notifications-component";
 
 const DTMN_API_URL = window.env.DTMN_API_URL;
 const X_RAPIDAPI_KEY = window.env.X_RAPIDAPI_KEY;
@@ -22,9 +23,33 @@ export const setMovieRating = async (content) => {
   };
   await axios.put(`${DTMN_API_URL}/item/rating`, data).then((response) => {
     if (response.data === true) {
-      alert("Successfully Updated on Database");
+      Store.addNotification({
+        title: "Okay",
+        message: "Movie rated successfully",
+        type: "success",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     } else {
-      alert("Movie already marked as watched on the database");
+      Store.addNotification({
+        title: "hmm 🤔",
+        message: "Looks like this was already seen.",
+        type: "error",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     }
     return response.data;
   });
@@ -52,9 +77,33 @@ export const markMovieAsWatched = async (movie) => {
   const data = { dbid: movie.dbid };
   await axios.put(`${DTMN_API_URL}/movie`, data).then((response) => {
     if (response.data === true) {
-      alert("Successfully Updated on Database");
+      Store.addNotification({
+        title: "Okay",
+        message: "Movie marked as watched.",
+        type: "success",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     } else {
-      alert("Movie already marked as watched on the database");
+      Store.addNotification({
+        title: "hmm 🤔",
+        message: "Looks like we've already seen this.",
+        type: "warning",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     }
     return response.data;
   });
@@ -74,9 +123,33 @@ export const deleteCollection = async (collectionName) => {
     .delete(`${DTMN_API_URL}/collection/${collectionName}`)
     .then((response) => {
       if (response.data === true) {
-        alert("Successfully Deleted collection");
+        Store.addNotification({
+          title: "Poof!",
+          message: "And it's gone",
+          type: "success",
+          insert: "top",
+          container: "bottom-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 3000,
+            onScreen: true,
+          },
+        });
       } else {
-        alert("Collection doesn't exist");
+        Store.addNotification({
+          title: "hmm 🤔",
+          message: "That collection doesn't exist.",
+          type: "success",
+          insert: "top",
+          container: "bottom-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 3000,
+            onScreen: true,
+          },
+        });
       }
       return response.data;
     });
@@ -135,11 +208,49 @@ export const addMovieToStorage = async (movie, submitter) => {
     submittedby: submitter || "Admin",
   };
 
+  Store.addNotification({
+    title: "Adding movie",
+    message: "Attempting to add movie...",
+    type: "info",
+    insert: "top",
+    container: "bottom-right",
+    animationIn: ["animate__animated", "animate__fadeIn"],
+    animationOut: ["animate__animated", "animate__fadeOut"],
+    dismiss: {
+      duration: 3000,
+      onScreen: true,
+    },
+  });
+
   return await axios.post(`${DTMN_API_URL}/movies`, data).then((response) => {
-    if (response.data.movieDetails.title !== data.title) {
-      alert("Successfully Added to the database");
+    if (response.data === true) {
+      Store.addNotification({
+        title: "Wonderful!",
+        message: "Movie Added",
+        type: "success",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     } else {
-      alert("Movie already exists");
+      Store.addNotification({
+        title: "Uh oh!",
+        message: "Movie seems to already exist.",
+        type: "warning",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     }
 
     return response.data;
@@ -152,11 +263,50 @@ export const addCustomEntry = async (entry) => {
     link: entry.link,
     submittedby: entry.user || "unknown",
   };
+  Store.addNotification({
+    title: "Adding movie",
+    message: "Attempting to add movie...",
+    type: "info",
+    insert: "top",
+    container: "bottom-right",
+    animationIn: ["animate__animated", "animate__fadeIn"],
+    animationOut: ["animate__animated", "animate__fadeOut"],
+    dismiss: {
+      duration: 3000,
+      onScreen: true,
+    },
+  });
+
   return await axios.post(`${DTMN_API_URL}/entry`, data).then((response) => {
     if (response.data === true) {
-      alert("Added entry to the database");
+      Store.addNotification({
+        title: "Success",
+        message: "Your entry was successfully added.",
+        type: "success",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
+      setTimeout(function() {window.location.reload();}, 1500)
     } else {
-      alert("entry with the same title already exists");
+      Store.addNotification({
+        title: "Uh oh!",
+        message: "Entry with the same name already exists.",
+        type: "warning",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     }
     return response.data;
   });
@@ -214,9 +364,33 @@ export const createCollection = async (collectionName) => {
     })
     .then((response) => {
       if (response.data === true) {
-        alert("Created New Collection");
+        Store.addNotification({
+          title: "Hooray!",
+          message: "Successfully created a new collection.",
+          type: "success",
+          insert: "top",
+          container: "bottom-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 3000,
+            onScreen: true,
+          },
+        });
       } else {
-        alert("Collection already exists on the database");
+        Store.addNotification({
+          title: "Uh oh!",
+          message: "Collection with the same name already exists.",
+          type: "warning",
+          insert: "top",
+          container: "bottom-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 3000,
+            onScreen: true,
+          },
+        });
       }
       return response.data;
     });
@@ -238,9 +412,33 @@ export const getMovieFromStorage = async (id) => {
 export const deleteMovieFromStorage = async (id) => {
   await axios.delete(`${DTMN_API_URL}/movie/${id}`).then((response) => {
     if (response.data === true) {
-      alert("Successfully Deleted Movie");
+      Store.addNotification({
+        title: "Poof!",
+        message: "And it's gone",
+        type: "success",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     } else {
-      alert("Movie doesn't exist");
+      Store.addNotification({
+        title: "hmm 🤔",
+        message: "I have never seen that entry before.",
+        type: "error",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 3000,
+          onScreen: true,
+        },
+      });
     }
     return response.data;
   });

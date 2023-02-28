@@ -13,6 +13,8 @@ import Movie from "./pages/Movie";
 import LibraryPage from "./pages/MovieLibraryPage";
 import NotFound from "./pages/NotFound";
 import Search from "./pages/Search";
+import { ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
         <Router>
           <div className=" flex flex-col h-screen w-screen justify-between">
             <Navbar />
+            <ReactNotifications />
             <main className="container mx-auto px-3 pb-12 h-full w-screen">
               <Alert />
               <Routes>
