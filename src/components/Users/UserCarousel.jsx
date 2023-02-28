@@ -1,8 +1,8 @@
 import Carousel from "better-react-carousel";
 import React, { useContext } from "react";
+import RenderIfVisible from "react-render-if-visible";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import UserCard from "./UserCard";
-
 function UserCarousel() {
   const { users } = useContext(MovieDBContext);
 
@@ -14,7 +14,9 @@ function UserCarousel() {
           .map((user, index) => {
             return (
               <Carousel.Item key={user._id}>
-                <UserCard user={user} index={index} />
+                <RenderIfVisible defaultHeight={10}>
+                  <UserCard user={user} index={index} />
+                </RenderIfVisible>
               </Carousel.Item>
             );
           })}

@@ -20,6 +20,12 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import RateUserModal from "../components/Users/RateUserModal";
 import UserChip from "../components/Users/UserChip";
+const style = {
+  position: "absolute",
+  width: "100%",
+  top: "50%",
+  left: "50%",
+};
 
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -76,8 +82,13 @@ function Movie() {
     getMovieData();
   }, [dispatch, id]);
 
+  // 
   if (loading || !movie) {
-    return <PropagateLoader />;
+    return (
+      <div className="w-full h-full">
+        <PropagateLoader style={style} />
+      </div>
+    );
   }
 
   if (movie && movie.movieDetails) {
@@ -282,7 +293,11 @@ function Movie() {
       )
     );
   } else {
-    return <PropagateLoader />;
+    return (
+      <div className="w-full h-full">
+        <PropagateLoader style={style} />
+      </div>
+    );
   }
 }
 

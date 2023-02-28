@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import RenderIfVisible from "react-render-if-visible";
 import MovieDBContext from "../../context/moviedb/MovieDBContext";
 import SearchedMovieListItem from "../layout/SearchedMovieListItem";
 import MovieListItem from "./MovieListItem";
@@ -14,12 +15,14 @@ function MovieList({ movieStorage, deleteItem, addItem, hideItem }) {
           {!isSearching ? (
             <div className="flex flex-col-reverse">
               {movieStorage.map((movie) => (
-                <MovieListItem
-                  movie={movie}
-                  key={movie._id}
-                  deleteItem={deleteItem}
-                  hideItem={hideItem}
-                />
+                <RenderIfVisible defaultHeight={300} visibleOffset={2000}>
+                  <MovieListItem
+                    movie={movie}
+                    key={movie._id}
+                    deleteItem={deleteItem}
+                    hideItem={hideItem}
+                  />
+                </RenderIfVisible>
               ))}
             </div>
           ) : movies ? (
